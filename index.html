@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Siddhi Jani | Data Analyst, Melbourne</title>
+<meta name="description" content="Siddhi Jani — Melbourne-based data analyst specialising in HR and workforce analytics with Power BI, Tableau, SQL and Azure.">
+<!-- EDIT: replace with your real GitHub Pages address once live -->
+<meta property="og:title" content="Siddhi Jani | Data Analyst">
+<meta property="og:description" content="HR & workforce analytics · Power BI · Tableau · SQL · Melbourne">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#EEEEF2; --tile:#FFFFFF; --ink:#1A1A2E; --muted:#4A4A60;
+    --accent:#5B45E0; --accent-ink:#FFFFFF;
+    --lime:#D7F36B; --lavender:#E4E0FB; --sky:#CDE7FF; --chip:#F4F3F8;
+    --dark:#1A1A2E; --dark-2:#2B2B45; --dark-text:#D4D2E6;
+    --radius:28px; --gap:16px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:Outfit,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+  .mono{font-family:'Geist Mono',ui-monospace,monospace;font-size:13px;letter-spacing:.02em}
+  .wrap{max-width:1160px;margin:0 auto;padding:32px 24px 64px;display:flex;flex-direction:column;gap:var(--gap)}
+  .row{display:flex;flex-wrap:wrap;gap:var(--gap)}
+  .col{display:flex;flex-direction:column;gap:var(--gap)}
+  .tile{background:var(--tile);border-radius:var(--radius);padding:28px;display:flex;flex-direction:column;gap:12px;
+        transition:transform .25s ease, box-shadow .25s ease}
+  .tile:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(26,26,46,.08)}
+  .w2{flex:2 1 560px}.w1{flex:1 1 280px}.w1s{flex:1 1 320px}
+  .muted{color:var(--muted)}
+  h1,h2,h3,p{margin:0}
+
+  /* nav */
+  nav{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;padding:4px 4px 12px}
+  .logo{font-weight:800;font-size:22px;text-decoration:none}
+  .logo span{color:var(--accent)}
+  .pills{display:flex;flex-wrap:wrap;gap:8px}
+  .pill{text-decoration:none;padding:11px 18px;border-radius:99px;background:var(--tile);font-weight:500;font-size:15px}
+  .pill:hover{background:var(--lavender)}
+  .pill.dark{background:var(--ink);color:#fff}
+  .pill.dark:hover{background:var(--accent)}
+
+  /* hero */
+  .hero{flex-direction:row;flex-wrap:wrap;align-items:center;gap:28px;padding:40px}
+  .avatar{width:128px;height:128px;border-radius:50%;background:var(--lavender);flex-shrink:0;overflow:hidden;
+          display:flex;align-items:center;justify-content:center;font-weight:800;font-size:40px;color:var(--accent)}
+  .avatar{position:relative}
+  .avatar img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .hero h1{font-size:clamp(34px,4.6vw,48px);line-height:1.05;font-weight:800;letter-spacing:-.03em}
+  .hero p{font-size:18px;line-height:1.55}
+  .lime{background:var(--lime)} .lavender{background:var(--lavender)} .sky{background:var(--sky)}
+  .big{font-size:28px;font-weight:700;line-height:1.1}
+  .dot{display:inline-block;width:10px;height:10px;border-radius:50%;background:#1E8E3E;margin-right:8px;
+       box-shadow:0 0 0 0 rgba(30,142,62,.5);animation:pulse 2s infinite}
+  @keyframes pulse{70%{box-shadow:0 0 0 10px rgba(30,142,62,0)}100%{box-shadow:0 0 0 0 rgba(30,142,62,0)}}
+
+  /* featured */
+  .featured{background:var(--dark);color:#fff;padding:32px;gap:18px}
+  .featured .meta{display:flex;flex-wrap:wrap;justify-content:space-between;gap:8px;color:#C4C2D8}
+  .shot{border-radius:18px;background:var(--dark-2);min-height:240px;position:relative;overflow:hidden;
+        display:flex;align-items:center;justify-content:center;color:#A9A7C2}
+  .shot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+  .shot.light{background:var(--chip);color:var(--muted);min-height:170px}
+  .featured h2{font-size:30px;font-weight:700;letter-spacing:-.02em}
+  .featured p{color:var(--dark-text);font-size:16px;line-height:1.55}
+  .btn{align-self:flex-start;background:var(--accent);color:var(--accent-ink);text-decoration:none;padding:13px 20px;border-radius:99px;font-weight:600}
+  .btn:hover{filter:brightness(1.1)}
+  .award{font-size:60px;font-weight:800;line-height:1;color:var(--accent)}
+  .tile h3{font-size:22px;font-weight:700}
+  .link{font-weight:600;margin-top:auto;text-decoration:none}
+  .link:hover{color:var(--accent)}
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{background:#fff;padding:7px 13px;border-radius:99px;font-size:14px;font-weight:500}
+
+  /* path */
+  .path{display:flex;flex-wrap:wrap;align-items:center;gap:12px;font-size:20px;font-weight:700}
+  .step{padding:12px 18px;border-radius:16px;background:var(--chip)}
+  .step.now{background:var(--accent);color:#fff}
+  .arrow{color:#8A88A0}
+  .contact{background:var(--accent);color:#fff;justify-content:space-between;gap:20px}
+  .contact .chips a{text-decoration:none;padding:12px 18px;border-radius:99px;font-weight:600;border:1.5px solid #fff}
+  .contact .chips a.solid{background:#fff;color:var(--ink)}
+  footer{text-align:center;padding:8px 0 0}
+
+  /* reveal on scroll */
+  .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease, transform .6s ease}
+  .reveal.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}.tile,.dot{transition:none;animation:none}}
+  @media (max-width:600px){.wrap{padding:20px 16px 48px}.hero{padding:28px}.tile{padding:24px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <nav aria-label="Main">
+    <a href="#top" class="logo">siddhi<span>.</span></a>
+    <div class="pills">
+      <a href="#work" class="pill">Work</a>
+      <a href="#about" class="pill">About</a>
+      <a href="#contact" class="pill">Contact</a>
+      <!-- EDIT: put your CV PDF in the assets folder with this exact name -->
+      <a href="assets/Siddhi_Jani_CV.pdf" class="pill dark" target="_blank" rel="noopener">Résumé</a>
+    </div>
+  </nav>
+
+  <!-- ===== HERO ===== -->
+  <div id="top" class="row reveal">
+    <div class="tile hero w2">
+      <!-- EDIT: add assets/profile.jpg (square photo). Initials show until then. -->
+      <div class="avatar"><img src="assets/profile.jpg" alt="Siddhi Jani" onerror="this.remove()">SJ</div>
+      <div class="col" style="flex:1 1 300px;gap:12px">
+        <h1>Hi, I'm Siddhi — a data analyst who speaks HR.</h1>
+        <p class="muted">I turn workforce data into dashboards people actually read.</p>
+      </div>
+    </div>
+    <div class="col w1">
+      <div class="tile lime" style="flex:1 1 auto;justify-content:space-between">
+        <span class="mono"><span class="dot"></span>STATUS</span>
+        <span class="big">Open to work<br>hybrid · remote</span>
+      </div>
+      <div class="tile" style="flex:1 1 auto;justify-content:space-between">
+        <span class="mono muted">BASED IN</span>
+        <span class="big">Melbourne, VIC</span>
+        <span class="muted" style="font-size:14px">Full Australian working rights</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== FEATURED PROJECT ===== -->
+  <div id="work" class="row reveal">
+    <article class="tile featured w2">
+      <div class="meta mono"><span>FEATURED PROJECT</span><span>Power BI · Power Query</span></div>
+      <!-- EDIT: add assets/attrition.png (dashboard screenshot) -->
+      <div class="shot mono"><img src="assets/attrition.png" alt="Employee Attrition and Flight Risk dashboard" onerror="this.remove()">[ dashboard screenshot ]</div>
+      <h2>Employee Attrition &amp; Flight Risk</h2>
+      <!-- EDIT: replace with your one-line key finding -->
+      <p>Who is likely to leave, and why. Built from scratch in Power BI with Power Query. [Your key finding here.]</p>
+      <!-- EDIT: link to GitHub repo or case-study page -->
+      <a href="https://github.com/YOUR-USERNAME/YOUR-REPO" class="btn" target="_blank" rel="noopener">View project</a>
+    </article>
+    <div class="col w1">
+      <div class="tile lavender">
+        <span class="mono">AWARD</span>
+        <span class="award">3rd</span>
+        <span style="font-size:15px">MVI · TDAI × Frezio internship</span>
+      </div>
+      <div class="tile">
+        <span class="mono muted">CERTIFIED</span>
+        <span style="font-size:22px;font-weight:700;line-height:1.2">Full-Stack Data Professional</span>
+        <span class="muted" style="font-size:14px">The Data Analytics Institute · 2026</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MORE PROJECTS + TOOLKIT ===== -->
+  <div class="row reveal">
+    <article class="tile w1s">
+      <span class="mono muted">TABLEAU</span>
+      <!-- EDIT: add assets/vps.png -->
+      <div class="shot light mono"><img src="assets/vps.png" alt="Victorian Public Sector Workforce dashboard" onerror="this.remove()">[ screenshot ]</div>
+      <h3>Victorian Public Sector Workforce</h3>
+      <p class="muted" style="font-size:15px;line-height:1.55">A Melbourne-focused look at Victoria's public-sector workforce. [Your key finding.]</p>
+      <a href="https://public.tableau.com/app/profile/YOUR-PROFILE" class="link" target="_blank" rel="noopener">Explore →</a>
+    </article>
+    <article class="tile w1s">
+      <span class="mono muted">AZURE DATABRICKS · SQL</span>
+      <!-- EDIT: add assets/databricks.png -->
+      <div class="shot light mono"><img src="assets/databricks.png" alt="Databricks notebook" onerror="this.remove()">[ screenshot ]</div>
+      <h3>HR Attrition in the Cloud</h3>
+      <p class="muted" style="font-size:15px;line-height:1.55">Ingested HR data into Databricks and analysed it with SQL. [Your key finding.]</p>
+      <a href="https://github.com/YOUR-USERNAME/YOUR-REPO" class="link" target="_blank" rel="noopener">Explore →</a>
+    </article>
+    <div class="tile sky w1s">
+      <span class="mono">TOOLKIT</span>
+      <div class="chips">
+        <span class="chip">Excel</span><span class="chip">Power BI</span><span class="chip">Tableau</span>
+        <span class="chip">SQL</span><span class="chip">Python</span><span class="chip">GA4</span>
+        <span class="chip">Azure</span><span class="chip">MS Fabric</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ABOUT + CONTACT ===== -->
+  <div id="about" class="row reveal">
+    <div class="tile w2" style="gap:20px">
+      <span class="mono muted">THE PATH HERE</span>
+      <div class="path">
+        <span class="step">HR · 3 yrs</span><span class="arrow" aria-hidden="true">→</span>
+        <span class="step">Teaching</span><span class="arrow" aria-hidden="true">→</span>
+        <span class="step now">Data Analytics</span>
+      </div>
+      <p class="muted" style="font-size:16px;line-height:1.6">Three years in HR taught me the questions behind workforce data; teaching taught me to explain the answers simply. MCA · BCA.</p>
+    </div>
+    <div id="contact" class="tile contact w1">
+      <span class="big">Let's work together.</span>
+      <div class="chips">
+        <!-- EDIT: your email, LinkedIn and GitHub -->
+        <a href="mailto:YOUR-EMAIL@gmail.com" class="solid">Email</a>
+        <a href="https://www.linkedin.com/in/YOUR-LINKEDIN" target="_blank" rel="noopener">LinkedIn</a>
+        <a href="https://github.com/YOUR-USERNAME" target="_blank" rel="noopener">GitHub</a>
+      </div>
+    </div>
+  </div>
+
+  <footer class="mono muted">© <span id="yr"></span> Siddhi Jani · Melbourne</footer>
+</div>
+
+<script>
+  document.getElementById('yr').textContent = new Date().getFullYear();
+  // fade tiles in as you scroll
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+</body>
+</html>
