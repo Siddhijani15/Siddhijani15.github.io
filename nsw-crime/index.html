@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NSW Crime Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Archivo:wght@600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+
+    <header class="dashboard-header">
+      <div class="title-group">
+        <h1>NSW Crime Dashboard</h1>
+        <p>Community resource centre — incident data sourced from NSW Police published records</p>
+      </div>
+      <div class="data-source">
+        <div>Data source: Google Sheets (CSV)</div>
+        <div id="recordRange">Loading…</div>
+      </div>
+    </header>
+
+    <!-- Loading -->
+    <div class="loading-overlay" id="loadingOverlay">
+      <div class="loading-spinner"></div>
+      <div class="text">Loading crime data from NSW Police records…</div>
+    </div>
+
+    <!-- Error -->
+    <div class="error-banner" id="errorBanner">
+      <div class="icon">&#9888;</div>
+      <div class="message" id="errorMessage">Failed to load data</div>
+      <div class="hint" id="errorHint">Please check your internet connection and try again.</div>
+    </div>
+
+    <!-- Dashboard content (hidden until data loads) -->
+    <div id="dashboard" style="display: none;">
+
+      <!-- KPI Cards -->
+      <section class="kpi-grid" id="kpiGrid">
+        <div class="kpi-card" id="kpi-total">
+          <div class="eyebrow">Total Incidents</div>
+          <div class="value value--large" data-raw="0">0</div>
+          <div class="context"><span class="highlight" id="kpi-total-ctx"></span></div>
+        </div>
+        <div class="kpi-card" id="kpi-category">
+          <div class="eyebrow">Most Common Offence</div>
+          <div class="value value--text" id="kpi-category-value">—</div>
+          <div class="context"><span class="highlight" id="kpi-category-ctx"></span></div>
+        </div>
+        <div class="kpi-card" id="kpi-area">
+          <div class="eyebrow">Highest Incident Area</div>
+          <div class="value value--text" id="kpi-area-value">—</div>
+          <div class="context"><span class="highlight" id="kpi-area-ctx"></span></div>
+        </div>
+        <div class="kpi-card" id="kpi-month">
+          <div class="eyebrow">Latest Reporting Month</div>
+          <div class="value value--text" id="kpi-month-value">—</div>
+          <div class="context"><span class="highlight" id="kpi-month-ctx"></span></div>
+        </div>
+      </section>
+
+      <!-- Filters -->
+      <section class="filters-bar">
+        <span class="section-label">Filters</span>
+        <div class="filter-group">
+          <label for="fYear">Year:</label>
+          <div class="select-wrapper">
+            <select id="fYear">
+              <option value="all">All Years</option>
+            </select>
+          </div>
+        </div>
+        <div class="filter-group">
+          <label for="fMonth">Month:</label>
+          <div class="select-wrapper">
+            <select id="fMonth">
+              <option value="all">All Months</option>
+            </select>
+          </div>
+        </div>
+        <div class="filter-group">
+          <label for="fArea">Statistical Area:</label>
+          <div class="select-wrapper">
+            <select id="fArea">
+              <option value="all">All Areas</option>
+            </select>
+          </div>
+        </div>
+        <div class="filter-group">
+          <label for="fCategory">Offence Category:</label>
+          <div class="select-wrapper">
+            <select id="fCategory">
+              <option value="all">All Categories</option>
+            </select>
+          </div>
+        </div>
+        <div class="filter-group">
+          <label for="fSubcategory">Offence Subcategory:</label>
+          <div class="select-wrapper">
+            <select id="fSubcategory">
+              <option value="all">All Subcategories</option>
+            </select>
+          </div>
+        </div>
+        <button class="reset-btn" id="resetBtn">Reset filters</button>
+      </section>
+
+      <div class="chips-row" id="chipsRow"></div>
+
+      <!-- Charts -->
+      <section class="charts-grid">
+
+        <!-- Chart 1: Crime incidents over time -->
+        <div class="chart-card">
+          <div class="panel-head">
+            <h2>Crime Incidents Over Time</h2>
+            <span class="hint">Total incidents by month</span>
+          </div>
+          <div class="chart-container">
+            <canvas id="timeChart"></canvas>
+          </div>
+        </div>
+
+        <!-- Chart row: category + area -->
+        <div class="chart-row">
+          <!-- Chart 2: Incidents by offence category -->
+          <div class="chart-card">
+            <div class="panel-head">
+              <h2>Incidents by Offence Category</h2>
+              <span class="hint">Total count per category</span>
+            </div>
+            <div class="chart-container">
+              <canvas id="categoryChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Chart 3: Incidents by geographic area -->
+          <div class="chart-card">
+            <div class="panel-head">
+              <h2>Incidents by Geographic Area</h2>
+              <span class="hint">Total count per statistical area</span>
+            </div>
+            <div class="chart-container">
+              <canvas id="areaChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chart 4: Top areas by incident count -->
+        <div class="chart-card">
+          <div class="panel-head">
+            <h2>Top Areas by Incident Count</h2>
+            <span class="hint">Ranking of areas by total incidents</span>
+          </div>
+          <div class="chart-container">
+            <canvas id="topAreasChart"></canvas>
+          </div>
+        </div>
+
+      </section>
+
+      <footer class="dashboard-footer">
+        NSW Crime Dashboard — internal community resource monitoring tool
+      </footer>
+    </div>
+  </div>
+
+  <script src="script.js" defer></script>
+</body>
+</html>
