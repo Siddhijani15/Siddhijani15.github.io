@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Weatherly</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <header class="app-header">
+      <h1>weather APP</h1>
+      <p>Get live weather for any city</p>
+    </header>
+
+    <form id="weather-form" class="weather-form">
+      <div class="form-group">
+        <label for="city">City</label>
+        <input type="text" id="city" name="city" placeholder="e.g. London" required />
+      </div>
+
+      <div class="form-group">
+        <label for="country">Country</label>
+        <input type="text" id="country" name="country" placeholder="e.g. GB" required />
+      </div>
+
+      <div class="form-group">
+        <label for="api-key">OpenWeatherMap API Key</label>
+        <input type="text" id="api-key" name="api-key" placeholder="Enter your API key" required />
+      </div>
+
+      <button type="submit" class="btn">Get Weather</button>
+    </form>
+
+    <div id="message" class="message" role="alert"></div>
+
+    <section id="weather-result" class="weather-result hidden">
+      <div class="weather-header">
+        <h2 id="location-name"></h2>
+      </div>
+
+      <div class="weather-main">
+        <div class="temp-block">
+          <span id="temperature" class="temperature"></span>
+          <span class="temp-unit">°C</span>
+        </div>
+        <div class="weather-icon">
+          <img id="weather-icon" alt="Weather condition" />
+        </div>
+      </div>
+
+      <div class="weather-condition">
+        <span id="condition-text"></span>
+      </div>
+
+      <ul class="weather-details">
+        <li>Feels like: <span id="feels-like"></span></li>
+        <li>Humidity: <span id="humidity"></span></li>
+        <li>Wind speed: <span id="wind-speed"></span></li>
+        <li>Pressure: <span id="pressure"></span></li>
+      </ul>
+    </section>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
