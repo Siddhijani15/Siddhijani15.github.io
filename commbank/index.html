@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Complaints Dashboard — Commonwealth Bank</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.umd.min.js"></script>
+<style>
+  :root{
+    --yellow:#FFCC00;
+    --yellow-soft:#FFF3C4;
+    --yellow-deep:#B98A00;
+    --ink:#15130F;
+    --charcoal:#4A473F;
+    --paper:#F7F6F2;
+    --card:#FFFFFF;
+    --border:#E4E1D8;
+    --muted:#8C887C;
+    --focus:#1657C9;
+    --radius:10px;
+    --shadow:0 1px 2px rgba(21,19,15,0.06), 0 4px 14px rgba(21,19,15,0.05);
+  }
+
+  *{box-sizing:border-box;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'IBM Plex Sans',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  a.skip-link{
+    position:absolute; left:-9999px; top:0; background:var(--ink); color:#fff;
+    padding:.6rem 1rem; z-index:200; border-radius:0 0 6px 0;
+  }
+  a.skip-link:focus{ left:0; }
+
+  .sr-only{
+    position:absolute; width:1px; height:1px; padding:0; margin:-1px;
+    overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+  }
+
+  :focus-visible{
+    outline:3px solid var(--focus);
+    outline-offset:2px;
+  }
+
+  /* ---------- Header ---------- */
+  header.app-header{
+    display:flex;
+    align-items:center;
+    gap:1rem;
+    padding:.9rem 1.5rem;
+    background:var(--ink);
+    border-bottom:4px solid var(--yellow);
+    flex-wrap:wrap;
+  }
+  .logo-mark{
+    display:flex; align-items:center; gap:.65rem;
+    padding-right:1rem;
+    border-right:1px solid rgba(255,255,255,0.18);
+  }
+  .logo-mark svg{ width:34px; height:34px; flex:none; }
+  .logo-mark .brand{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.68rem;
+    letter-spacing:.09em;
+    color:#EDEAE0;
+    line-height:1.25;
+    text-transform:uppercase;
+  }
+  .logo-mark .brand strong{
+    display:block; color:#fff; font-size:.78rem; letter-spacing:.03em;
+  }
+  h1.title{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;
+    font-size:clamp(1.25rem,2.4vw,1.7rem);
+    color:#fff;
+    margin:0;
+    letter-spacing:-.01em;
+  }
+  .title-sub{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.72rem;
+    color:var(--yellow);
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    margin-top:.15rem;
+  }
+  .header-meta{
+    margin-left:auto;
+    text-align:right;
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.72rem;
+    color:#C9C6BB;
+    line-height:1.5;
+  }
+  .header-meta strong{ color:var(--yellow); font-size:1.05rem; display:block; font-family:'Space Grotesk',sans-serif;}
+
+  /* ---------- Filter bar ---------- */
+  .filter-bar{
+    background:var(--card);
+    border-bottom:1px solid var(--border);
+    padding:.9rem 1.5rem;
+    display:flex;
+    flex-wrap:wrap;
+    align-items:flex-end;
+    gap:1rem;
+    position:sticky;
+    top:0;
+    z-index:20;
+  }
+  .filter-field{ display:flex; flex-direction:column; gap:.3rem; min-width:170px; }
+  .filter-field label{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.66rem;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    color:var(--charcoal);
+  }
+  select{
+    font-family:'IBM Plex Sans',sans-serif;
+    font-size:.9rem;
+    padding:.5rem .7rem;
+    border:1px solid var(--border);
+    border-radius:8px;
+    background:var(--paper) url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="6"><path d="M0 0l5 6 5-6z" fill="%2315130F"/></svg>') no-repeat right .75rem center;
+    appearance:none;
+    -webkit-appearance:none;
+    color:var(--ink);
+    min-height:40px;
+    cursor:pointer;
+  }
+  select:hover{ border-color:var(--yellow-deep); }
+
+  .filter-chips{
+    display:flex; flex-wrap:wrap; gap:.5rem; align-items:center; margin-left:auto;
+  }
+  .chip{
+    display:inline-flex; align-items:center; gap:.4rem;
+    background:var(--yellow-soft);
+    border:1px solid var(--yellow-deep);
+    color:var(--ink);
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.72rem;
+    padding:.32rem .5rem .32rem .65rem;
+    border-radius:999px;
+  }
+  .chip button{
+    background:var(--ink); color:#fff; border:none; border-radius:50%;
+    width:16px; height:16px; font-size:.65rem; line-height:1; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; padding:0;
+  }
+  .clear-all{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.72rem;
+    background:var(--ink); color:#fff; border:none; border-radius:999px;
+    padding:.42rem .8rem; cursor:pointer;
+  }
+  .clear-all:hover{ background:var(--charcoal); }
+  .clear-all[disabled]{ opacity:.35; cursor:not-allowed; }
+
+  main{ padding:1.5rem; max-width:1440px; margin:0 auto; }
+
+  #live-region{ margin:0 0 .8rem; font-family:'IBM Plex Mono',monospace; font-size:.75rem; color:var(--charcoal); }
+
+  /* ---------- KPI row ---------- */
+  .kpi-grid{
+    display:grid;
+    grid-template-columns:repeat(6,1fr);
+    gap:.9rem;
+    margin-bottom:1.4rem;
+  }
+  .kpi-card{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:.95rem 1rem 1rem;
+    position:relative;
+    overflow:hidden;
+  }
+  .kpi-card::before{
+    content:"";
+    position:absolute; left:0; top:0; bottom:0; width:4px; background:var(--yellow);
+  }
+  .kpi-label{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.63rem;
+    letter-spacing:.06em;
+    text-transform:uppercase;
+    color:var(--charcoal);
+    margin:0 0 .4rem;
+  }
+  .kpi-value{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:700;
+    font-size:1.55rem;
+    line-height:1.1;
+    margin:0;
+    color:var(--ink);
+  }
+  .kpi-value small{ font-size:.85rem; font-weight:600; color:var(--muted); }
+  .kpi-sub{ font-size:.72rem; color:var(--muted); margin:.35rem 0 0; }
+
+  /* ---------- Panel grid ---------- */
+  .panel-grid{
+    display:grid;
+    grid-template-columns:1.05fr 1.35fr 1.15fr;
+    gap:1rem;
+    margin-bottom:1rem;
+    align-items:stretch;
+  }
+  .panel{
+    background:var(--card);
+    border:1px solid var(--border);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:1rem 1.1rem 1.1rem;
+    display:flex;
+    flex-direction:column;
+    min-width:0;
+  }
+  .panel-head{
+    display:flex; align-items:baseline; justify-content:space-between; gap:.5rem;
+    margin-bottom:.6rem;
+  }
+  .panel h2{
+    font-family:'Space Grotesk',sans-serif;
+    font-size:1rem;
+    margin:0;
+    color:var(--ink);
+  }
+  .panel-note{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.63rem;
+    color:var(--muted);
+    text-transform:uppercase;
+    letter-spacing:.05em;
+  }
+  .chart-wrap{ position:relative; flex:1; min-height:230px; }
+  .chart-wrap canvas{ max-width:100%; }
+
+  .legend-list{
+    display:flex; flex-wrap:wrap; gap:.4rem; margin-top:.7rem;
+  }
+  .legend-btn{
+    font-family:'IBM Plex Mono',monospace;
+    font-size:.68rem;
+    background:var(--paper);
+    border:1px solid var(--border);
+    color:var(--charcoal);
+    border-radius:6px;
+    padding:.28rem .5rem;
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    gap:.35rem;
+  }
+  .legend-btn .dot{ width:8px; height:8px; border-radius:2px; background:var(--charcoal); display:inline-block; }
+  .legend-btn[aria-pressed="true"]{
+    background:var(--ink); border-color:var(--ink); color:#fff;
+  }
+  .legend-btn[aria-pressed="true"] .dot{ background:var(--yellow); }
+  .legend-btn:hover{ border-color:var(--yellow-deep); }
+
+  /* ---------- State map ---------- */
+  .map-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    grid-template-rows:repeat(4,1fr);
+    gap:.4rem;
+    flex:1;
+    min-height:230px;
+  }
+  .map-tile{
+    grid-area: var(--area);
+    border:1px solid var(--border);
+    border-radius:7px;
+    background:var(--paper);
+    cursor:pointer;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    font-family:'IBM Plex Mono',monospace;
+    padding:.25rem;
+    color:var(--ink);
+    transition:transform .12s ease;
+  }
+  .map-tile:hover{ transform:translateY(-2px); }
+  .map-tile .code{ font-size:.78rem; font-weight:600; letter-spacing:.03em; }
+  .map-tile .count{ font-size:.85rem; font-family:'Space Grotesk',sans-serif; font-weight:700; margin-top:.1rem;}
+  .map-tile[aria-pressed="true"]{ outline:3px solid var(--ink); outline-offset:-3px; }
+  .map-tile.empty{ visibility:hidden; }
+  .map-legend{
+    display:flex; align-items:center; gap:.4rem; margin-top:.7rem;
+    font-family:'IBM Plex Mono',monospace; font-size:.64rem; color:var(--muted);
+  }
+  .map-legend .swatch{ display:inline-block; width:44px; height:8px; border-radius:4px;
+    background:linear-gradient(90deg,var(--paper),var(--yellow) 55%,var(--yellow-deep)); border:1px solid var(--border);}
+
+  /* ---------- Annual breakdown (full width) ---------- */
+  .panel-wide{
+    grid-column:1 / -1;
+  }
+  .panel-wide .chart-wrap{ min-height:220px; }
+
+  footer{
+    max-width:1440px; margin:0 auto; padding:0 1.5rem 2rem;
+    font-family:'IBM Plex Mono',monospace; font-size:.7rem; color:var(--muted);
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width:1180px){
+    .kpi-grid{ grid-template-columns:repeat(3,1fr); }
+    .panel-grid{ grid-template-columns:1fr 1fr; }
+    .panel-grid .panel:nth-child(3){ grid-column:1 / -1; }
+  }
+  @media (max-width:720px){
+    header.app-header{ padding:.8rem 1rem; }
+    .header-meta{ display:none; }
+    .filter-bar{ padding:.8rem 1rem; position:static; }
+    .filter-field{ min-width:44%; flex:1; }
+    .filter-chips{ margin-left:0; width:100%; }
+    main{ padding:1rem; }
+    .kpi-grid{ grid-template-columns:repeat(2,1fr); gap:.6rem; }
+    .kpi-value{ font-size:1.25rem; }
+    .panel-grid{ grid-template-columns:1fr; }
+    .panel-grid .panel:nth-child(3){ grid-column:auto; }
+    .map-grid{ min-height:280px; }
+  }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main-content">Skip to dashboard content</a>
+
+<header class="app-header">
+  <div class="logo-mark">
+    <svg viewBox="0 0 100 100" role="img" aria-label="Commonwealth Bank diamond logo">
+      <polygon points="50,4 96,50 74,50 50,26 26,50 4,50" fill="#FFCC00"/>
+      <polygon points="96,50 74,50 50,74 62,86" fill="#0B0A08"/>
+    </svg>
+    <span class="brand">Commonwealth<strong>Bank</strong></span>
+  </div>
+  <div>
+    <h1 class="title">Complaints Dashboard</h1>
+    <div class="title-sub">Consumer complaints · 2011&ndash;2020</div>
+  </div>
+  <div class="header-meta" id="header-meta">
+    <strong id="header-total">467</strong>records in view
+  </div>
+</header>
+
+<form class="filter-bar" id="filter-bar" aria-label="Complaint filters">
+  <div class="filter-field">
+    <label for="filter-year">Year</label>
+    <select id="filter-year">
+      <option value="">All years</option>
+    </select>
+  </div>
+  <div class="filter-field">
+    <label for="filter-product">Product</label>
+    <select id="filter-product">
+      <option value="">All products</option>
+    </select>
+  </div>
+  <div class="filter-field">
+    <label for="filter-state">State</label>
+    <select id="filter-state">
+      <option value="">All states</option>
+    </select>
+  </div>
+  <div class="filter-chips" id="filter-chips" aria-live="polite"></div>
+  <button type="button" class="clear-all" id="clear-all" disabled>Clear all filters</button>
+</form>
+
+<main id="main-content">
+  <p id="live-region" role="status" aria-live="polite"></p>
+
+  <section class="kpi-grid" aria-label="Key performance indicators">
+    <div class="kpi-card"><p class="kpi-label">Total complaints</p><p class="kpi-value" id="kpi-total">&ndash;</p><p class="kpi-sub" id="kpi-total-sub"></p></div>
+    <div class="kpi-card"><p class="kpi-label">Timely response rate</p><p class="kpi-value" id="kpi-timely">&ndash;</p><p class="kpi-sub" id="kpi-timely-sub"></p></div>
+    <div class="kpi-card"><p class="kpi-label">Consumer disputed rate</p><p class="kpi-value" id="kpi-disputed">&ndash;</p><p class="kpi-sub" id="kpi-disputed-sub"></p></div>
+    <div class="kpi-card"><p class="kpi-label">Resolution rate</p><p class="kpi-value" id="kpi-resolved">&ndash;</p><p class="kpi-sub" id="kpi-resolved-sub"></p></div>
+    <div class="kpi-card"><p class="kpi-label">Monetary relief rate</p><p class="kpi-value" id="kpi-relief">&ndash;</p><p class="kpi-sub" id="kpi-relief-sub"></p></div>
+    <div class="kpi-card"><p class="kpi-label">Top issue</p><p class="kpi-value" id="kpi-issue" style="font-size:1.05rem;">&ndash;</p><p class="kpi-sub" id="kpi-issue-sub"></p></div>
+  </section>
+
+  <section class="panel-grid" aria-label="Complaint breakdowns">
+    <div class="panel">
+      <div class="panel-head"><h2>Request type</h2><span class="panel-note">click to filter</span></div>
+      <div class="chart-wrap"><canvas id="chart-requesttype" role="img" aria-label="Bar chart of complaints by request type"></canvas></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head"><h2>Complaint trend</h2><span class="panel-note">monthly, click a point</span></div>
+      <div class="chart-wrap"><canvas id="chart-trend" role="img" aria-label="Line chart of monthly complaint volume"></canvas></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-head"><h2>State-wise complaints</h2><span class="panel-note">click a state</span></div>
+      <div class="map-grid" id="map-grid" role="group" aria-label="Complaints by state, click a tile to filter"></div>
+      <div class="map-legend"><span class="swatch" aria-hidden="true"></span> fewer &rarr; more complaints</div>
+    </div>
+
+    <div class="panel panel-wide">
+      <div class="panel-head"><h2>Annual breakdown</h2><span class="panel-note">click a bar</span></div>
+      <div class="chart-wrap"><canvas id="chart-annual" role="img" aria-label="Bar chart of complaints by year, 2011 to 2020"></canvas></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  Source: Commonwealth Bank complaint records (n=467). Dashboard built client-side; all figures recompute from the filtered dataset.
+</footer>
+
+<script id="data-json" type="application/json">[["CBA-000001","2011-08-26",2011,"Mortgage","Owner-occupier home loan","Poor customer service","Referral","SA",5290,"Closed with explanation","Yes","No","Closed"],["CBA-000002","2011-12-07",2011,"Checking / savings","Term deposit","Problem with a transaction","Phone","QLD",4551,"Closed with explanation","Yes","No","Closed"],["CBA-000003","2012-02-11",2012,"Credit card","Platinum credit card","Poor customer service","Fax","NSW",2170,"Closed with explanation","No","No","Closed"],["CBA-000004","2012-02-16",2012,"Other","Car loan","Delayed processing","Referral","VIC",3150,"Closed with non-monetary relief","Yes","No","Closed"],["CBA-000005","2012-02-17",2012,"Other","Insurance","Poor customer service","Phone","WA",6210,"Closed with explanation","Yes","No","Closed"],["CBA-000006","2012-02-26",2012,"Other","Personal loan","Fraud or unauthorised transaction","Web","NSW",2250,"Closed without relief","No","No","Closed"],["CBA-000007","2012-02-29",2012,"Other","Foreign currency","Interest rate not as advertised","Referral","QLD",4870,"Closed with explanation","Yes","No","Closed"],["CBA-000008","2012-03-04",2012,"Bank services","International transfer","Account closed without notice","Referral","WA",6100,"Closed without relief","Yes","Yes","Closed"],["CBA-000009","2012-03-07",2012,"Checking / savings","Term deposit","Problem with a transaction","Referral","QLD",4101,"Closed with explanation","Yes","Yes","Closed"],["CBA-000010","2012-03-08",2012,"Other","Foreign currency","Difficulty contacting the bank","Referral","VIC",3550,"Closed with explanation","Yes","No","Closed"],["CBA-000011","2012-03-13",2012,"Other","Overdraft","Difficulty contacting the bank","Referral","QLD",4101,"Closed with monetary relief","Yes","No","Closed"],["CBA-000012","2012-03-23",2012,"Other","Foreign currency","Account closed without notice","Web","VIC",3350,"Closed with explanation","Yes","No","Closed"],["CBA-000013","2012-03-28",2012,"Bank services","Debit card","Dispute not resolved","Phone","NT",810,"Closed with explanation","Yes","Yes","Closed"],["CBA-000014","2012-05-05",2012,"Mortgage","Line of credit","Incorrect fees or charges","Postal mail","NSW",2500,"Closed with explanation","Yes","No","Closed"],["CBA-000015","2012-05-10",2012,"Credit card","Store credit card","Incorrect fees or charges","Referral","VIC",3150,"Closed with explanation","Yes","No","Closed"],["CBA-000016","2012-05-12",2012,"Other","Car loan","Problem with a transaction","Web","WA",6210,"In progress","Yes","No","In progress"],["CBA-000017","2012-05-14",2012,"Credit card","Platinum credit card","Problem with a transaction","Referral","NSW",2250,"Closed without relief","Yes","No","Closed"],["CBA-000018","2012-05-16",2012,"Other","Superannuation","Incorrect fees or charges","Referral","TAS",7320,"Closed with explanation","Yes","No","Closed"],["CBA-000019","2012-05-19",2012,"Other","Car loan","Interest rate not as advertised","Web","WA",6210,"Closed with explanation","Yes","No","Closed"],["CBA-000020","2012-05-21",2012,"Checking / savings","Savings account","Fraud or unauthorised transaction","Phone","NSW",2000,"Closed with explanation","Yes","No","Closed"],["CBA-000021","2012-05-22",2012,"Credit card","Low rate credit card","Interest rate not as advertised","Web","SA",5290,"Closed without relief","Yes","No","Closed"],["CBA-000022","2012-05-31",2012,"Other","Car loan","Difficulty contacting the bank","Web","QLD",4207,"Closed with explanation","No","No","Closed"],["CBA-000023","2012-06-06",2012,"Credit card","Platinum credit card","Delayed processing","Referral","NSW",2170,"Closed with explanation","Yes","No","Closed"],["CBA-000024","2012-06-16",2012,"Mortgage","Line of credit","Problem with a transaction","Referral","NSW",2170,"Closed with monetary relief","Yes","No","Closed"],["CBA-000025","2012-07-05",2012,"Bank services","Online banking","Account closed without notice","Referral","NSW",2170,"Closed without relief","Yes","No","Closed"],["CBA-000026","2012-07-09",2012,"Checking / savings","Youth account","Dispute not resolved","Referral","NSW",2500,"Closed with explanation","Yes","No","Closed"],["CBA-000027","2012-07-31",2012,"Credit card","Low rate credit card","Problem with a transaction","Web","QLD",4870,"Closed with explanation","Yes","No","Closed"],["CBA-000028","2012-08-30",2012,"Credit card","Platinum credit card","Difficulty contacting the bank","Web","QLD",4551,"Closed with explanation","Yes","No","Closed"],["CBA-000029","2012-09-08",2012,"Credit card","Platinum credit card","Incorrect fees or charges","Web","QLD",4101,"Closed with explanation","No","Yes","Closed"],["CBA-000030","2012-09-18",2012,"Credit card","Platinum credit card","Statement error","Web","NSW",2000,"Closed with explanation","Yes","No","Closed"],["CBA-000031","2012-09-25",2012,"Mortgage","Line of credit","Account closed without notice","Web","QLD",4207,"Closed with explanation","Yes","No","Closed"],["CBA-000032","2012-10-01",2012,"Credit card","Low rate credit card","Dispute not resolved","Web","VIC",3020,"Closed with non-monetary relief","Yes","No","Closed"],["CBA-000033","2012-10-11",2012,"Checking / savings","Savings account","Problem with a transaction","Referral","VIC",3150,"Closed without relief","Yes","Yes","Closed"],["CBA-000034","2012-10-23",2012,"Credit card","Platinum credit card","Dispute not resolved","Web","NSW",2170,"Closed with monetary relief","Yes","No","Closed"],["CBA-000035","2012-10-27",2012,"Bank services","Direct debit","Problem with a transaction","Referral","NSW",2170,"In progress","Yes","No","In progress"],["CBA-000036","2012-10-29",2012,"Credit card","Store credit card","Account closed without notice","Referral","QLD",4870,"Closed with explanation","No","No","Closed"],["CBA-000037","2012-10-31",2012,"Bank services","Debit card","Poor customer service","Web","VIC",3121,"Closed with explanation","Yes","Yes","Closed"],["CBA-000038","2012-11-08",2012,"Other","Insurance","Problem with a transaction","Referral","NSW",2170,"Closed with explanation","Yes","No","Closed"],["CBA-000039","2012-11-10",2012,"Credit card","Low rate credit card","Account closed without notice","Referral","NSW",2250,"Closed with explanation","Yes","No","Closed"],["CBA-000040","2012-11-24",2012,"Other","Personal loan","Account closed without notice","Web","WA",6210,"Closed with explanation","Yes","No","Closed"],["CBA-000041","2012-12-05",2012,"Other","Insurance","Difficulty contacting the bank","Referral","NSW",2150,"Closed with explanation","Yes","No","Closed"],["CBA-000042","2012-12-07",2012,"Bank services","Online banking","Incorrect fees or charges","Referral","VIC",3121,"Closed with non-monetary relief","Yes","No","Closed"],["CBA-000043","2012-12-12",2012,"Checking / savings","Term deposit","Dispute not resolved","Postal mail","VIC",3350,"Closed with explanation","Yes","No","Closed"],["CBA-000044","2012-12-14",2012,"Mortgage","Investment home loan","Delayed processing","Web","QLD",4350,"Closed with explanation","Yes","No","Closed"],["CBA-000045","2012-12-27",2012,"Other","Overdraft","Account closed without notice","Phone","VIC",3000,"In progress","Yes","No","In progress"],["CBA-000046","2013-01-22",2013,"Credit card","Rewards credit card","Interest rate not as advertised","Web","ACT",2600,"Closed with explanation","Yes","No","Closed"],["CBA-000047","2013-01-22",2013,"Checking / savings","Everyday transaction account","Dispute not resolved","Web","NSW",2600,"Closed without relief","Yes","Yes","Closed"],["CBA-000048","2013-02-03",2013,"Other","Overdraft","Dispute not resolved","Web","SA",5041,"Closed with explanation","Yes","No","Closed"],["CBA-000049","2013-02-13",2013,"Checking / savings","Term deposit","Statement error","Referral","VIC",3000,"Closed with monetary relief","Yes","No","Closed"],["CBA-000050","2013-02-16",2013,"Credit card","Platinum credit card","Interest rate not as advertised","Postal mail","NSW",2250,"Closed with explanation","Yes","No","Closed"],["CBA-000051","2013-02-24",2013,"Checking / savings","Savings account","Interest rate not as advertised","Phone","WA",6017,"Closed with explanation","Yes","No","Closed"],["CBA-000052","2013-03-05",2013,"Checking / savings","Youth account","Interest rate not as advertised","Fax","SA",5041,"Closed with explanation","Yes","No","Closed"],["CBA-000053","2013-03-12",2013,"Checking / savings","Savings account","Interest rate not as advertised","Web","TAS",7000,"Closed with monetary relief","Yes","No","Closed"],["CBA-000054","2013-03-13",2013,"Other","Personal loan","Problem with a transaction","Web","NT",800,"Closed without relief","Yes","No","Closed"],["CBA-000055","2013-03-15",2013,"Mortgage","Fixed rate home loan","Delayed processing","Postal mail","WA",6017,"Closed with explanation","Yes","Yes","Closed"],["CBA-000056","2013-04-09",2013,"Mortgage","Investment home loan","Difficulty contacting the bank","Referral","NSW",2010,"Closed with non-monetary relief","Yes","No","Closed"],["CBA-000057","2013-04-15",2013,"Mortgage","Line of credit","Poor customer service","Web","NSW",2150,"Closed with explanation","Yes","No","Closed"],["CBA-000058","2013-05-07",2013,"Credit card","Low rate credit card","Incorrect fees or charges","Postal mail","VIC",3000,"Closed with monetary relief","Yes","No","Closed"],["CBA-000059","2013-05-08",2013,"Bank services","Direct debit","Interest rate not as advertised","Postal mail","QLD",4870,"Closed with explanation","Yes","Yes","Closed"],["CBA-000060","2013-05-12",2013,"Other","Overdraft","Delayed processing","Referral","NSW",2170,"Closed without relief","No","No","Closed"],["CBA-000061","2013-05-14",2013,"Other","Personal loan","Dispute not resolved","Web","NSW",2170,"Closed with monetary relief","Yes","Yes","Closed"],["CBA-000062","2013-05-17",2013,"Other","Superannuation","Incorrect fees or charges","Referral","NSW",2600,"Closed with monetary relief","No","No","Closed"],["CBA-000063","2013-05-19",2013,"Checking / savings","Youth account","Account closed without notice","Web","QLD",4350,"Closed without relief","Yes","Yes","Closed"],["CBA-000064","2013-05-25",2013,"Credit card","Store credit card","Incorrect fees or charges","Referral","NSW",2150,"Closed without relief","Yes","No","Closed"],["CBA-000065","2013-05-29",2013,"Checking / savings","Youth account","Statement error","Phone","VIC",3020,"Closed with monetary relief","Yes","No","Closed"],["CBA-000066","2013-06-09",2013,"Other","Superannuation","Problem with a transaction","Referral","NSW",2170,"Closed with non-monetary relief","Yes","No","Closed"],["CBA-000067","2013-06-16",2013,"Mortgage","Line of credit","Dispute not resolved","Referral","VIC",3020,"Closed with monetary relief","Yes","No","Closed"],["CBA-000068","2013-07-13",2013,"Checking / savings","Youth account","Poor customer service","Referral","NSW",2500,"Closed without relief","Yes","No","Closed"],["CBA-000069","2013-08-10",2013,"Bank services","International transfer","Statement error","Referral","VIC",3121,"In progress","Yes","Yes","In progress"],["CBA-000070","2013-08-17",2013,"Checking / savings","Savings account","Difficulty contacting the bank","Referral","QLD",4101,"Closed with explanation","Yes","No","Closed"],["CBA-000071","2013-08-20",2013,"Other","Superannuation","Delayed processing","Web","VIC",3020,"Closed with explanation","Yes","No","Closed"],["CBA-000072","2013-08-21",2013,"Checking / savings","Savings account","Incorrect fees or charges","Web","WA",6100,"Closed with explanation","No","No","Closed"],["CBA-000073","2013-09-16",2013,"Credit card","Rewards credit card","Delayed processing","Referral","VIC",3550,"Closed with explanation","Yes","No","Closed"],["CBA-000074","2013-09-23",2013,"Credit card","Rewards credit card","Dispute not resolved","Web","NT",800,"In progress","Yes","No","In progress"],["CBA-000075","2013-09-25",2013,"Other","Insurance","Problem with a transaction","Web","NSW",2000,"Closed with explanation","Yes","No","Closed"],["CBA-000076","2013-10-13",2013,"Other","Foreign currency","Delayed processing","Web","NSW",2500,"Closed with explanation","Yes","No","Closed"],["CBA-000077","2013-10-13",2013,"Other","Foreign currency","Delayed processing","Web","NSW",2150,"Closed with explanation","Yes","Yes","Closed"],["CBA-000078","2013-10-16",2013,"Mortgage","Fixed rate home loan","Account closed without notice","Web","NSW",2170,"Closed with explanation","No","No","Closed"],["CBA-000079","2013-10-23",2013,"Checking / savings","Term deposit","Incorrect fees or charges","Web","QLD",4870,"Closed with explanation","No","No","Closed"],["CBA-000080","2013-11-16",2013,"Other","Superannuation","Dispute not resolved","Phone","VIC",3000,"Closed with explanation","Yes","No","Closed"],["CBA-000081","2013-11-17",2013,"Checking / savings","Everyday transaction account","Difficulty contacting the bank","Web","VIC",3350,"Closed with non-monetary relief","Yes","No","Closed"],["CBA-000082","2013-11-24",2013,"Credit card","Store credit card","Poor customer service","Referral","QLD",4000,"Closed with explanation","Yes","No","Closed"],["CBA-000083","2013-11-26",2013,"Mortgage","Investment home loan","Fraud or unauthorised transaction","Referral","QLD",4350,"Closed with explanation","Yes","No","Closed"],["CBA-000084","2013-12-12",2013,"Other","Foreign currency","Incorrect fees or charges","Phone","NSW",2500,"Closed without relief","Yes","No","Closed"],["CBA-000085","2013-12-16",2013,"Bank services","Online banking","Poor customer service","Web","VIC",3121,"Closed with explanation","Yes","No","Closed"],["CBA-000086","2013-12-18",2013,"Checking / savings","Term deposit","Delayed processing","Phone","VIC",3000,"Closed without relief","Yes","No","Closed"],["CBA-000087","2013-12-25",2013,"Bank services","Direct debit","Poor customer service","Web","QLD",4101,"Closed with explanation","Yes","No","Closed"],["CBA-000088","2013-12-28",2013,"Other","Car loan","Poor customer service","Web","TAS",7000,"Closed without relief","Yes","No","Closed"],["CBA-000089","2014-01-13",2014,"Credit card","Rewards credit card","Incorrect fees or charges","Postal mail","NSW",2150,"Closed with explanation","Yes","No","Closed"],["CBA-000090","2014-01-15",2014,"Mortgage","Owner-occupier home loan","Account closed without notice","Referral","WA",6430,"Closed with monetary relief","Yes","No","Closed"],["CBA-000091","2014-01-29",2014,"Checking / savings","Youth account","Account closed without notice","Web","VIC",3020,"Closed with explanation","Yes","No","Closed"],["CBA-000092","2014-02-09",2014,"Bank services","International transfer","Account closed without notice","Web","NSW",2150,"Closed with non-monetary relief","Yes","No","Closed"],["CBA-000093","2014-02-16",2014,"Bank services","ATM access","Poor customer service","Postal mail","QLD",4000,"Closed with non-monetary relief","No","No","Closed"],["CBA-000094","2014-02-17",2014,"Credit card","Store credit card","Incorrect fees or charges","Postal mail","NSW",2600,"In progress","Yes","Yes","In progress"],["CBA-000095","2014-03-03",2014,"Other","Insurance","Dispute not resolved","Web","WA",6000,"Closed with explanation","Yes","No","Closed"],["CBA-000096","2014-03-11",2014,"Credit card","Platinum credit card","Interest rate not as advertised","Web","ACT",2601,"Closed with non-monetary relief","Yes","No","Closed"],["CBA-000097","2014-03-20",2014,"Credit card","Store credit card","Problem with a transaction","Referral","SA",5290,"Closed with non-monetary relief","Yes","No","Closed"],["CBA-000098","2014-04-06",2014,"Mortgage","Fixed rate home loan","Delayed processing","Web","WA",6430,"Closed without relief","Yes","No","Closed"],["CBA-000099","2014-04-10",2014,"Credit card","Low rate credit card","Difficulty contacting the bank","Web","VIC",3350,"Closed with explanation","Yes","No","Closed"],["CBA-000100","2014-04-12",2014,"Credit card","Store credit card","Problem with a transaction","Referral","VIC",3350,"Closed with explanation","Yes","No","Closed"],["CBA-000101","2014-04-14",2014,"Other","Foreign currency","Problem with a transaction","Web","NSW",2600,"Closed with explanation","Yes","No","Closed"],["CBA-000102","2014-04-17",2014,"Credit card","Rewards credit card","Delayed processing","Web","QLD",4551,"In progress","Yes","No","In progress"],["CBA-000103","2014-04-20",2014,"Other","Foreign currency","Delayed processing","Phone","VIC",3020,"Closed with explanation","Yes","No","Closed"],["CBA-000104","2014-04-21",2014,"Other","Overdraft","Poor customer service","Referral","WA",6100,"Closed with explanation","Yes","No","Closed"],["CBA-000105","2014-04-24",2014,"Credit card","Rewards credit card","Account closed without notice","Web","NSW",2010,"Closed with explanation","Yes","Yes","Closed"],["CBA-000106","2014-04-30",2014,"Other","Insurance","Delayed processing","Referral","NSW",2170,"Closed with explanation","Yes","No","Closed"],["CBA-000107","2014-05-22",2014,"Mortgage","Fixed rate home loan","Interest rate not as advertised","Web","NSW",2170,"Closed with explanation","Yes","No","Closed"],["CBA-000108","2014-06-04",2014,"Checking / savings","Term deposit","Account closed without notice","Web","QLD",4207,"Closed with explanation","Yes","No","Closed"],["CBA-000109","2014-06-05",2014,"Bank services","Debit card","Difficulty contacting the bank","Web","VIC",3550,"Closed with explanation","No","No","Closed"],["CBA-000110","2014-06-10",2014,"Bank services","Direct debit","Difficulty contacting the bank","Referral","VIC",3020,"Closed with explanation","Yes","No","Closed"],["CBA-000111","2014-06-12",2014,"Credit card","Rewards credit card","Difficulty contacting the bank","Web","VIC",3121,"Closed with non-monetary relief","Yes","No","Closed"],["CBA-000112","2014-06-16",2014,"Mortgage","Investment home loan","Poor customer service","Web","QLD",4101,"Closed without relief","No","No","Closed"],["CBA-000113","2014-06-24",2014,"Credit card","Platinum credit card","Difficulty contacting the bank","Web","VIC",3350,"Closed with monetary relief","Yes","No","Closed"],["CBA-000114","2014-07-05",2014,"Bank services","Online banking","Problem with a transaction","Web","NSW",2250,"Closed with monetary relief","Yes","No","Closed"],["CBA-000115","2014-07-17",2014,"Bank services","Online banking","Incorrect fees or charges","Web","NSW",2600,"Closed with non-monetary relief","Yes","No","Closed"],["CBA-000116","2014-07-19",2014,"Checking / savings","Term deposit","Statement error","Web","QLD",4101,"Closed with explanation","Yes","Yes","Closed"],["CBA-000117","2014-07-27",2014,"Checking / savings","Term deposit","Problem with a transaction","Web","SA",5000,"Closed with non-monetary relief","Yes","No","Closed"],["CBA-000118","2014-07-31",2014,"Checking / savings","Youth account","Dispute not resolved","Web","NSW",2000,"Closed with explanation","Yes","No","Closed"],["CBA-000119","2014-08-03",2014,"Credit card","Rewards credit card","Fraud or unauthorised transaction","Referral","NSW",2010,"Closed with non-monetary relief","Yes","No","Closed"],["CBA-000120","2014-08-15",2014,"Mortgage","Line of credit","Statement error","Web","QLD",4207,"Closed with explanation","Yes","No","Closed"],["CBA-000121","2014-08-18",2014,"Checking / savings","Everyday transaction account","Poor customer service","Referral","WA",6017,"Closed without relief","Yes","No","Closed"],["CBA-000122","2014-08-21",2014,"Credit card","Store credit card","Account closed without notice","Web","WA",6430,"Closed with explanation","Yes","Yes","Closed"],["CBA-000123","2014-08-26",2014,"Bank services","International transfer","Poor customer service","Web","NSW",2010,"Closed with explanation","Yes","No","Closed"],["CBA-000124","2014-08-30",2014,"Other","Overdraft","Poor customer service","Web","VIC",3020,"Closed with non-monetary relief","Yes","No","Closed"],["CBA-000125","2014-09-03",2014,"Mortgage","Line of credit","Poor customer service","Referral","VIC",3150,"Closed with explanation","Yes","No","Closed"],["CBA-000126","2014-09-15",2014,"Bank services","Debit card","Problem with a transaction","Web","QLD",4551,"Closed with monetary relief","Yes","No","Closed"],["CBA-000127","2014-09-16",2014,"Credit card","Rewards credit card","Difficulty contacting the bank","Web","WA",6000,"Closed with monetary relief","Yes","No","Closed"],["CBA-000128","2014-09-20",2014,"Checking / savings","Term deposit","Interest rate not as advertised","Referral","NSW",2170,"Closed without relief","Yes","No","Closed"],["CBA-000129","2014-09-24",2014,"Other","Overdraft","Fraud or unauthorised transaction","Phone","VIC",3000,"Closed with non-monetary relief","Yes","Yes","Closed"],["CBA-000130","2014-10-01",2014,"Credit card","Rewards credit card","Problem with a transaction","Web","VIC",3550,"Closed with explanation","Yes","No","Closed"],["CBA-000131","2014-10-10",2014,"Mortgage","Fixed rate home loan","Difficulty contacting the bank","Phone","NSW",2250,"Closed with monetary relief","Yes","No","Closed"],["CBA-000132","2014-10-27",2014,"Credit card","Low rate credit card","Problem with a transaction","Web","VIC",3550,"In progress","Yes","No","In progress"],["CBA-000133","2014-11-09",2014,"Other","Insurance","Problem with a transaction","Web","VIC",3550,"Closed with explanation","Yes","Yes","Closed"],["CBA-000134","2014-11-19",2014,"Mortgage","Owner-occupier home loan","Problem with a transaction","Web","VIC",3020,"Closed with explanation","Yes","No","Closed"],["CBA-000135","2014-12-06",2014,"Credit card","Store credit card","Difficulty contacting the bank","Web","VIC",3550,"Closed with explanation","Yes","Yes","Closed"],["CBA-000136","2014-12-11",2014,"Credit card","Rewards credit card","Interest rate not as advertised","Phone","VIC",3121,"Closed with monetary relief","No","No","Closed"],["CBA-000137","2014-12-17",2014,"Credit card","Rewards credit card","Dispute not resolved","Web","VIC",3020,"Closed with explanation","Yes","No","Closed"],["CBA-000138","2014-12-20",2014,"Bank services","International transfer","Fraud or unauthorised transaction","Web","QLD",4870,"Closed with explanation","Yes","No","Closed"],["CBA-000139","2014-12-22",2014,"Credit card","Low rate credit card","Interest rate not as advertised","Referral","NSW",2600,"Closed with monetary relief","Yes","No","Closed"],["CBA-000140","2014-12-22",2014,"Other","Personal loan","Interest rate not as advertised","Web","NSW",2150,"In progress","Yes","No","In progress"],["CBA-000141","2015-01-15",2015,"Mortgage","Fixed rate home loan","Dispute not resolved","Web","QLD",4350,"Closed without relief","Yes","No","Closed"],["CBA-000142","2015-01-26",2015,"Bank services","Debit card","Dispute not resolved","Web","VIC",3121,"Closed with non-monetary relief","Yes","No","Closed"],["CBA-000143","2015-01-26",2015,"Bank services","Direct debit","Incorrect fees or charges","Phone","NSW",2170,"Closed with explanation","Yes","No","Closed"],["CBA-000144","2015-01-30",2015,"Mortgage","Line of credit","Problem with a transaction","Web","VIC",3550,"Closed without relief","Yes","No","Closed"],["CBA-000145","2015-02-09",2015,"Checking / savings","Everyday transaction account","Incorrect fees or charges","Referral","NSW",2000,"Closed with explanation","Yes","No","Closed"],["CBA-000146","2015-02-12",2015,"Checking / savings","Everyday transaction account","Difficulty contacting the bank","Phone","QLD",4101,"Closed with monetary relief","Yes","No","Closed"],["CBA-000147","2015-02-19",2015,"Credit card","Rewards credit card","Interest rate not as advertised","Referral","WA",6000,"Closed with non-monetary relief","Yes","Yes","Closed"],["CBA-000148","2015-02-23",2015,"Bank services","Online banking","Statement error","Referral","NSW",2000,"Closed without relief","Yes","No","Closed"],["CBA-000149","2015-03-14",2015,"Checking / savings","Term deposit","Dispute not resolved","Referral","SA",5108,"Closed with explanation","Yes","No","Closed"],["CBA-000150","2015-03-22",2015,"Bank services","International transfer","Interest rate not as advertised","Web","ACT",2600,"Closed with explanation","Yes","No","Closed"],["CBA-000151","2015-04-14",2015,"Other","Personal loan","Incorrect fees or charges","Referral","QLD",4350,"In progress","Yes","Yes","In progress"],["CBA-000152","2015-04-25",2015,"Checking / savings","Youth account","Interest rate not as advertised","Referral","NSW",2010,"Closed without relief","No","No","Closed"],["CBA-000153","2015-05-20",2015,"Bank services","Debit card","Incorrect fees or charges","Web","QLD",4350,"Closed with explanation","Yes","Yes","Closed"],["CBA-000154","2015-05-23",2015,"Credit card","Rewards credit card","Problem with a transaction","Web","VIC",3150,"Closed with explanation","Yes","Yes","Closed"],["CBA-000155","2015-05-24",2015,"Bank services","Debit card","Problem with a transaction","Referral","VIC",3350,"Closed with non-monetary relief","Yes","No","Closed"],["CBA-000156","2015-06-02",2015,"Credit card","Rewards credit card","Interest rate not as advertised","Fax","WA",6210,"Closed with explanation","Yes","No","Closed"],["CBA-000157","2015-06-16",2015,"Checking / savings","Everyday transaction account","Delayed processing","Web","NSW",2500,"In progress","Yes","Yes","In progress"],["CBA-000158","2015-06-20",2015,"Bank services","International transfer","Difficulty contacting the bank","Postal mail","WA",6000,"Closed with explanation","Yes","No","Closed"],["CBA-000159","2015-06-24",2015,"Bank services","Direct debit","Dispute not resolved","Web","WA",6100,"Closed with explanation","Yes","No","Closed"],["CBA-000160","2015-06-25",2015,"Other","Car loan","Incorrect fees or charges","Referral","VIC",3020,"Closed with explanation","Yes","No","Closed"],["CBA-000161","2015-06-26",2015,"Checking / savings","Term deposit","Fraud or unauthorised transaction","Phone","NSW",2150,"Closed with monetary relief","Yes","No","Closed"],["CBA-000162","2015-06-28",2015,"Other","Car loan","Poor customer service","Web","VIC",3121,"In progress","Yes","No","In progress"],["CBA-000163","2015-07-07",2015,"Credit card","Rewards credit card","Difficulty contacting the bank","Web","VIC",3350,"In progress","Yes","No","In progress"],["CBA-000164","2015-07-13",2015,"Checking / savings","Savings account","Interest rate not as advertised","Web","NSW",2150,"Closed with explanation","Yes","Yes","Closed"],["CBA-000165","2015-07-27",2015,"Credit card","Rewards credit card","Poor customer service","Web","NSW",2170,"Closed with explanation","Yes","Yes","Closed"],["CBA-000166","2015-08-07",2015,"Checking / savings","Everyday transaction account","Statement error","Phone","VIC",3000,"Closed with explanation","Yes","No","Closed"],["CBA-000167","2015-08-17",2015,"Other","Superannuation","Fraud or unauthorised transaction","Postal mail","VIC",3350,"Closed without relief","Yes","No","Closed"],["CBA-000168","2015-08-21",2015,"Credit card","Store credit card","Interest rate not as advertised","Phone","NSW",2000,"Closed with explanation","Yes","No","Closed"],["CBA-000169","2015-08-27",2015,"Other","Insurance","Delayed processing","Phone","VIC",3020,"Closed with explanation","Yes","No","Closed"],["CBA-000170","2015-09-20",2015,"Mortgage","Owner-occupier home loan","Incorrect fees or charges","Web","SA",5108,"Closed with explanation","Yes","Yes","Closed"],["CBA-000171","2015-09-30",2015,"Mortgage","Investment home loan","Poor customer service","Referral","VIC",3000,"Closed without relief","Yes","No","Closed"],["CBA-000172","2015-09-30",2015,"Other","Overdraft","Fraud or unauthorised transaction","Referral","QLD",4551,"Closed with explanation","Yes","No","Closed"],["CBA-000173","2015-10-17",2015,"Other","Foreign currency","Account closed without notice","Fax","NSW",2500,"In progress","Yes","Yes","In progress"],["CBA-000174","2015-10-18",2015,"Credit card","Platinum credit card","Fraud or unauthorised transaction","Referral","TAS",7000,"In progress","Yes","Yes","In progress"],["CBA-000175","2015-10-26",2015,"Credit card","Store credit card","Problem with a transaction","Web","NSW",2150,"Closed with explanation","No","No","Closed"],["CBA-000176","2015-11-29",2015,"Mortgage","Fixed rate home loan","Delayed processing","Web","NSW",2250,"Closed with explanation","Yes","No","Closed"],["CBA-000177","2015-12-06",2015,"Mortgage","Investment home loan","Interest rate not as advertised","Web","SA",5108,"Closed with explanation","Yes","No","Closed"],["CBA-000178","2015-12-08",2015,"Other","Personal loan","Difficulty contacting the bank","Referral","QLD",4000,"Closed with monetary relief","Yes","No","Closed"],["CBA-000179","2015-12-23",2015,"Other","Insurance","Interest rate not as advertised","Web","VIC",3350,"Closed with monetary relief","Yes","No","Closed"],["CBA-000180","2015-12-25",2015,"Credit card","Store credit card","Dispute not resolved","Web","NSW",2500,"Closed with explanation","Yes","No","Closed"],["CBA-000181","2015-12-29",2015,"Mortgage","Fixed rate home loan","Difficulty contacting the bank","Web","VIC",3150,"Closed without relief","Yes","No","Closed"],["CBA-000182","2016-01-06",2016,"Mortgage","Owner-occupier home loan","Delayed processing","Fax","VIC",3350,"Closed with explanation","Yes","No","Closed"],["CBA-000183","2016-01-12",2016,"Other","Overdraft","Problem with a transaction","Referral","ACT",2612,"Closed with explanation","Yes","No","Closed"],["CBA-000184","2016-02-01",2016,"Credit card","Store credit card","Incorrect fees or charges","Referral","VIC",3550,"Closed with explanation","No","No","Closed"],["CBA-000185","2016-02-05",2016,"Other","Insurance","Dispute not resolved","Phone","NT",800,"Closed with explanation","Yes","Yes","Closed"],["CBA-000186","2016-02-10",2016,"Checking / savings","Everyday transaction account","Difficulty contacting the bank","Postal mail","VIC",3150,"Closed with monetary relief","Yes","No","Closed"],["CBA-000187","2016-02-11",2016,"Credit card","Rewards credit card","Problem with a transaction","Web","VIC",3121,"Closed with non-monetary relief","Yes","No","Closed"],["CBA-000188","2016-03-02",2016,"Checking / savings","Youth account","Delayed processing","Web","WA",6430,"Closed with monetary relief","Yes","No","Closed"],["CBA-000189","2016-03-13",2016,"Other","Foreign currency","Poor customer service","Web","NSW",2600,"Closed with explanation","Yes","No","Closed"],["CBA-000190","2016-03-19",2016,"Mortgage","Investment home loan","Difficulty contacting the bank","Referral","NSW",2250,"Closed with monetary relief","No","No","Closed"],["CBA-000191","2016-03-22",2016,"Credit card","Platinum credit card","Delayed processing","Web","VIC",3550,"Closed with explanation","Yes","Yes","Closed"],["CBA-000192","2016-03-27",2016,"Other","Superannuation","Problem with a transaction","Referral","WA",6017,"Closed with explanation","Yes","No","Closed"],["CBA-000193","2016-03-27",2016,"Other","Personal loan","Incorrect fees or charges","Web","QLD",4101,"In progress","Yes","Yes","In progress"],["CBA-000194","2016-03-28",2016,"Mortgage","Investment home loan","Problem with a transaction","Postal mail","TAS",7010,"Closed without relief","Yes","No","Closed"],["CBA-000195","2016-04-09",2016,"Checking / savings","Everyday transaction account","Difficulty contacting the bank","Fax","WA",6000,"Closed with monetary relief","Yes","No","Closed"],["CBA-000196","2016-04-20",2016,"Credit card","Rewards credit card","Statement error","Web","QLD",4101,"Closed with explanation","Yes","No","Closed"],["CBA-000197","2016-05-05",2016,"Credit card","Low rate credit card","Dispute not resolved","Referral","VIC",3020,"Closed without relief","Yes","No","Closed"],["CBA-000198","2016-05-14",2016,"Mortgage","Owner-occupier home loan","Problem with a transaction","Web","QLD",4101,"Closed with explanation","Yes","Yes","Closed"],["CBA-000199","2016-06-20",2016,"Credit card","Low rate credit card","Poor customer service","Web","SA",5041,"Closed with explanation","Yes","No","Closed"],["CBA-000200","2016-06-24",2016,"Bank services","ATM access","Poor customer service","Referral","NSW",2170,"Closed without relief","Yes","No","Closed"],["CBA-000201","2016-06-29",2016,"Other","Car loan","Difficulty contacting the bank","Web","SA",5041,"Closed with explanation","Yes","No","Closed"],["CBA-000202","2016-07-03",2016,"Credit card","Rewards credit card","Dispute not resolved","Web","NSW",2250,"Closed with explanation","Yes","Yes","Closed"],["CBA-000203","2016-07-08",2016,"Credit card","Platinum credit card","Dispute not resolved","Web","SA",5108,"Closed with explanation","Yes","No","Closed"],["CBA-000204","2016-07-14",2016,"Other","Foreign currency","Delayed processing","Phone","WA",6430,"Closed without relief","Yes","Yes","Closed"],["CBA-000205","2016-07-14",2016,"Mortgage","Investment home loan","Interest rate not as advertised","Web","QLD",4350,"Closed with non-monetary relief","Yes","No","Closed"],["CBA-000206","2016-07-25",2016,"Checking / savings","Savings account","Poor customer service","Web","VIC",3550,"Closed with monetary relief","Yes","Yes","Closed"],["CBA-000207","2016-07-31",2016,"Mortgage","Fixed rate home loan","Problem with a transaction","Phone","NSW",2150,"Closed with monetary relief","Yes","Yes","Closed"],["CBA-000208","2016-08-06",2016,"Checking / savings","Youth account","Interest rate not as advertised","Web","VIC",3020,"Closed with explanation","Yes","No","Closed"],["CBA-000209","2016-08-13",2016,"Other","Overdraft","Interest rate not as advertised","Referral","QLD",4551,"Closed with explanation","Yes","No","Closed"],["CBA-000210","2016-08-16",2016,"Mortgage","Line of credit","Interest rate not as advertised","Phone","QLD",4000,"Closed with monetary relief","Yes","Yes","Closed"],["CBA-000211","2016-09-24",2016,"Mortgage","Line of credit","Account closed without notice","Web","QLD",4870,"Closed without relief","Yes","No","Closed"],["CBA-000212","2016-09-28",2016,"Credit card","Low rate credit card","Dispute not resolved","Web","NSW",2500,"Closed with explanation","Yes","No","Closed"],["CBA-000213","2016-10-01",2016,"Bank services","Direct debit","Account closed without notice","Web","VIC",3350,"Closed with explanation","Yes","No","Closed"],["CBA-000214","2016-10-05",2016,"Other","Overdraft","Interest rate not as advertised","Web","VIC",3000,"Closed with non-monetary relief","Yes","No","Closed"],["CBA-000215","2016-10-07",2016,"Credit card","Store credit card","Incorrect fees or charges","Web","QLD",4101,"Closed with explanation","Yes","No","Closed"],["CBA-000216","2016-10-08",2016,"Other","Overdraft","Delayed processing","Web","NSW",2170,"Closed with non-monetary relief","Yes","No","Closed"],["CBA-000217","2016-10-14",2016,"Bank services","Online banking","Dispute not resolved","Fax","WA",6000,"Closed with explanation","Yes","No","Closed"],["CBA-000218","2016-10-24",2016,"Credit card","Rewards credit card","Fraud or unauthorised transaction","Referral","SA",5290,"Closed with explanation","Yes","No","Closed"],["CBA-000219","2016-10-31",2016,"Credit card","Store credit card","Delayed processing","Phone","QLD",4551,"Closed without relief","Yes","No","Closed"],["CBA-000220","2016-11-01",2016,"Checking / savings","Youth account","Fraud or unauthorised transaction","Web","VIC",3020,"Closed with explanation","Yes","Yes","Closed"],["CBA-000221","2016-11-14",2016,"Other","Foreign currency","Problem with a transaction","Web","WA",6210,"Closed with monetary relief","Yes","No","Closed"],["CBA-000222","2016-11-25",2016,"Mortgage","Fixed rate home loan","Poor customer service","Web","NSW",2170,"In progress","Yes","Yes","In progress"],["CBA-000223","2016-11-30",2016,"Other","Foreign currency","Delayed processing","Web","WA",6100,"Closed without relief","Yes","No","Closed"],["CBA-000224","2016-12-02",2016,"Credit card","Store credit card","Delayed processing","Web","QLD",4551,"In progress","Yes","No","In progress"],["CBA-000225","2016-12-17",2016,"Other","Personal loan","Poor customer service","Referral","QLD",4551,"Closed with non-monetary relief","Yes","No","Closed"],["CBA-000226","2016-12-20",2016,"Other","Car loan","Problem with a transaction","Web","VIC",3121,"Closed with monetary relief","Yes","No","Closed"],["CBA-000227","2017-01-02",2017,"Checking / savings","Everyday transaction account","Statement error","Referral","NSW",2600,"Closed with explanation","Yes","No","Closed"],["CBA-000228","2017-01-17",2017,"Other","Foreign currency","Difficulty contacting the bank","Web","VIC",3150,"Closed with non-monetary relief","Yes","No","Closed"],["CBA-000229","2017-01-17",2017,"Checking / savings","Youth account","Incorrect fees or charges","Phone","VIC",3350,"In progress","Yes","No","In progress"],["CBA-000230","2017-01-18",2017,"Mortgage","Owner-occupier home loan","Fraud or unauthorised transaction","Web","QLD",4000,"Closed with explanation","Yes","Yes","Closed"],["CBA-000231","2017-01-23",2017,"Other","Superannuation","Incorrect fees or charges","Web","QLD",4207,"Closed with non-monetary relief","Yes","No","Closed"],["CBA-000232","2017-01-25",2017,"Credit card","Low rate credit card","Poor customer service","Phone","QLD",4207,"Closed without relief","Yes","No","Closed"],["CBA-000233","2017-01-28",2017,"Checking / savings","Everyday transaction account","Problem with a transaction","Postal mail","TAS",7000,"Closed with explanation","Yes","No","Closed"],["CBA-000234","2017-02-16",2017,"Bank services","ATM access","Incorrect fees or charges","Referral","VIC",3121,"Closed with explanation","Yes","No","Closed"],["CBA-000235","2017-02-16",2017,"Mortgage","Investment home loan","Fraud or unauthorised transaction","Web","SA",5041,"Closed with explanation","Yes","Yes","Closed"],["CBA-000236","2017-02-24",2017,"Checking / savings","Youth account","Account closed without notice","Web","WA",6100,"Closed with monetary relief","Yes","No","Closed"],["CBA-000237","2017-02-26",2017,"Credit card","Rewards credit card","Poor customer service","Web","NSW",2150,"Closed with non-monetary relief","Yes","No","Closed"],["CBA-000238","2017-03-05",2017,"Bank services","Direct debit","Delayed processing","Referral","NSW",2010,"Closed with explanation","Yes","No","Closed"],["CBA-000239","2017-03-14",2017,"Other","Personal loan","Statement error","Referral","SA",5041,"Closed without relief","Yes","No","Closed"],["CBA-000240","2017-03-17",2017,"Other","Superannuation","Incorrect fees or charges","Postal mail","QLD",4551,"Closed with explanation","Yes","No","Closed"],["CBA-000241","2017-04-10",2017,"Credit card","Rewards credit card","Fraud or unauthorised transaction","Referral","QLD",4870,"Closed with non-monetary relief","Yes","No","Closed"],["CBA-000242","2017-04-12",2017,"Bank services","International transfer","Difficulty contacting the bank","Web","VIC",3000,"Closed with explanation","Yes","No","Closed"],["CBA-000243","2017-04-14",2017,"Checking / savings","Savings account","Delayed processing","Phone","VIC",3000,"Closed with explanation","Yes","No","Closed"],["CBA-000244","2017-04-21",2017,"Bank services","International transfer","Account closed without notice","Web","VIC",3020,"Closed without relief","Yes","No","Closed"],["CBA-000245","2017-04-26",2017,"Credit card","Store credit card","Poor customer service","Web","TAS",7320,"Closed with explanation","Yes","Yes","Closed"],["CBA-000246","2017-04-29",2017,"Other","Foreign currency","Dispute not resolved","Referral","NSW",2170,"Closed with monetary relief","Yes","No","Closed"],["CBA-000247","2017-05-07",2017,"Mortgage","Fixed rate home loan","Account closed without notice","Web","WA",6100,"Closed with explanation","Yes","Yes","Closed"],["CBA-000248","2017-05-10",2017,"Credit card","Store credit card","Delayed processing","Referral","WA",6210,"In progress","Yes","No","In progress"],["CBA-000249","2017-05-12",2017,"Bank services","International transfer","Problem with a transaction","Web","SA",5000,"Closed with explanation","Yes","No","Closed"],["CBA-000250","2017-05-15",2017,"Mortgage","Line of credit","Delayed processing","Web","NSW",2010,"Closed with explanation","Yes","No","Closed"],["CBA-000251","2017-05-16",2017,"Mortgage","Owner-occupier home loan","Fraud or unauthorised transaction","Web","WA",6100,"Closed with explanation","Yes","No","Closed"],["CBA-000252","2017-05-16",2017,"Credit card","Platinum credit card","Interest rate not as advertised","Web","NSW",2010,"Closed with explanation","Yes","Yes","Closed"],["CBA-000253","2017-05-25",2017,"Checking / savings","Term deposit","Poor customer service","Web","VIC",3350,"Closed with explanation","Yes","Yes","Closed"],["CBA-000254","2017-06-05",2017,"Bank services","Online banking","Account closed without notice","Web","QLD",4101,"Closed with explanation","Yes","No","Closed"],["CBA-000255","2017-06-06",2017,"Credit card","Store credit card","Dispute not resolved","Phone","VIC",3020,"In progress","Yes","No","In progress"],["CBA-000256","2017-06-08",2017,"Other","Personal loan","Problem with a transaction","Web","QLD",4000,"In progress","Yes","Yes","In progress"],["CBA-000257","2017-06-13",2017,"Checking / savings","Savings account","Dispute not resolved","Web","WA",6100,"Closed with explanation","Yes","No","Closed"],["CBA-000258","2017-07-01",2017,"Other","Insurance","Interest rate not as advertised","Postal mail","QLD",4551,"Closed with non-monetary relief","Yes","Yes","Closed"],["CBA-000259","2017-07-05",2017,"Mortgage","Owner-occupier home loan","Dispute not resolved","Web","SA",5108,"Closed with monetary relief","Yes","Yes","Closed"],["CBA-000260","2017-07-20",2017,"Mortgage","Owner-occupier home loan","Interest rate not as advertised","Web","VIC",3350,"Closed with monetary relief","Yes","Yes","Closed"],["CBA-000261","2017-07-29",2017,"Other","Personal loan","Problem with a transaction","Phone","ACT",2601,"Closed with explanation","Yes","Yes","Closed"],["CBA-000262","2017-08-12",2017,"Mortgage","Fixed rate home loan","Incorrect fees or charges","Referral","NSW",2250,"Closed with non-monetary relief","Yes","No","Closed"],["CBA-000263","2017-08-14",2017,"Mortgage","Owner-occupier home loan","Interest rate not as advertised","Email","NSW",2150,"Closed with monetary relief","Yes","No","Closed"],["CBA-000264","2017-08-17",2017,"Mortgage","Investment home loan","Delayed processing","Postal mail","VIC",3550,"Closed with explanation","Yes","No","Closed"],["CBA-000265","2017-09-01",2017,"Credit card","Rewards credit card","Dispute not resolved","Postal mail","VIC",3550,"Closed with monetary relief","Yes","No","Closed"],["CBA-000266","2017-09-03",2017,"Bank services","ATM access","Fraud or unauthorised transaction","Referral","NSW",2150,"Closed without relief","Yes","No","Closed"],["CBA-000267","2017-09-15",2017,"Other","Foreign currency","Statement error","Web","NSW",2600,"Closed without relief","Yes","No","Closed"],["CBA-000268","2017-09-19",2017,"Mortgage","Fixed rate home loan","Delayed processing","Referral","NSW",2150,"Closed with explanation","Yes","No","Closed"],["CBA-000269","2017-09-21",2017,"Other","Insurance","Problem with a transaction","Referral","SA",5000,"Closed without relief","Yes","No","Closed"],["CBA-000270","2017-09-24",2017,"Credit card","Platinum credit card","Poor customer service","Web","WA",6017,"Closed with non-monetary relief","Yes","No","Closed"],["CBA-000271","2017-10-09",2017,"Credit card","Low rate credit card","Statement error","Web","NSW",2170,"Closed with monetary relief","Yes","No","Closed"],["CBA-000272","2017-10-20",2017,"Other","Insurance","Incorrect fees or charges","Referral","NSW",2170,"Closed without relief","Yes","No","Closed"],["CBA-000273","2017-11-07",2017,"Other","Overdraft","Delayed processing","Web","VIC",3121,"Closed with explanation","Yes","Yes","Closed"],["CBA-000274","2017-11-11",2017,"Checking / savings","Everyday transaction account","Incorrect fees or charges","Web","NSW",2010,"Closed with explanation","Yes","No","Closed"],["CBA-000275","2017-11-12",2017,"Mortgage","Investment home loan","Poor customer service","Referral","NSW",2500,"Closed with explanation","Yes","No","Closed"],["CBA-000276","2017-11-13",2017,"Credit card","Low rate credit card","Statement error","Web","WA",6100,"Closed with explanation","Yes","No","Closed"],["CBA-000277","2017-11-14",2017,"Bank services","International transfer","Delayed processing","Web","NSW",2500,"Closed without relief","Yes","No","Closed"],["CBA-000278","2017-11-29",2017,"Bank services","Direct debit","Statement error","Phone","QLD",4207,"Closed with non-monetary relief","Yes","Yes","Closed"],["CBA-000279","2017-12-10",2017,"Bank services","Debit card","Delayed processing","Web","QLD",4870,"Closed with explanation","Yes","No","Closed"],["CBA-000280","2017-12-17",2017,"Checking / savings","Youth account","Interest rate not as advertised","Postal mail","WA",6430,"Closed with explanation","Yes","No","Closed"],["CBA-000281","2017-12-18",2017,"Checking / savings","Term deposit","Interest rate not as advertised","Web","NSW",2250,"Closed with explanation","Yes","No","Closed"],["CBA-000282","2017-12-19",2017,"Credit card","Low rate credit card","Dispute not resolved","Phone","WA",6000,"Closed with monetary relief","Yes","No","Closed"],["CBA-000283","2017-12-19",2017,"Checking / savings","Term deposit","Delayed processing","Referral","VIC",3350,"Closed with monetary relief","Yes","No","Closed"],["CBA-000284","2017-12-27",2017,"Other","Overdraft","Dispute not resolved","Referral","QLD",4551,"In progress","Yes","No","In progress"],["CBA-000285","2017-12-30",2017,"Credit card","Platinum credit card","Fraud or unauthorised transaction","Postal mail","NSW",2600,"Closed with monetary relief","Yes","No","Closed"],["CBA-000286","2018-01-07",2018,"Bank services","Debit card","Problem with a transaction","Referral","ACT",2612,"Closed with explanation","Yes","Yes","Closed"],["CBA-000287","2018-01-22",2018,"Credit card","Platinum credit card","Problem with a transaction","Referral","QLD",4350,"Closed with explanation","Yes","No","Closed"],["CBA-000288","2018-01-25",2018,"Credit card","Rewards credit card","Incorrect fees or charges","Phone","QLD",4350,"Closed with non-monetary relief","Yes","No","Closed"],["CBA-000289","2018-01-26",2018,"Bank services","ATM access","Account closed without notice","Referral","VIC",3121,"Closed without relief","Yes","No","Closed"],["CBA-000290","2018-02-06",2018,"Other","Insurance","Interest rate not as advertised","Web","SA",5041,"Closed with explanation","Yes","No","Closed"],["CBA-000291","2018-02-15",2018,"Other","Foreign currency","Account closed without notice","Web","VIC",3020,"Closed with monetary relief","No","No","Closed"],["CBA-000292","2018-02-16",2018,"Checking / savings","Everyday transaction account","Delayed processing","Referral","NSW",2000,"Closed with explanation","Yes","No","Closed"],["CBA-000293","2018-02-20",2018,"Checking / savings","Youth account","Difficulty contacting the bank","Web","NSW",2600,"Closed with non-monetary relief","Yes","No","Closed"],["CBA-000294","2018-02-24",2018,"Checking / savings","Everyday transaction account","Incorrect fees or charges","Web","NSW",2500,"Closed without relief","Yes","No","Closed"],["CBA-000295","2018-02-27",2018,"Other","Personal loan","Interest rate not as advertised","Referral","VIC",3000,"Closed with explanation","Yes","No","Closed"],["CBA-000296","2018-02-28",2018,"Credit card","Store credit card","Interest rate not as advertised","Referral","VIC",3000,"Closed with non-monetary relief","Yes","No","Closed"],["CBA-000297","2018-03-01",2018,"Mortgage","Line of credit","Interest rate not as advertised","Referral","SA",5108,"Closed with monetary relief","Yes","Yes","Closed"],["CBA-000298","2018-03-08",2018,"Mortgage","Line of credit","Dispute not resolved","Web","NSW",2500,"In progress","Yes","No","In progress"],["CBA-000299","2018-03-09",2018,"Credit card","Store credit card","Delayed processing","Web","VIC",3550,"Closed with explanation","Yes","Yes","Closed"],["CBA-000300","2018-03-10",2018,"Other","Car loan","Incorrect fees or charges","Web","VIC",3550,"Closed without relief","Yes","No","Closed"],["CBA-000301","2018-03-14",2018,"Mortgage","Investment home loan","Interest rate not as advertised","Web","SA",5041,"Closed with explanation","Yes","No","Closed"],["CBA-000302","2018-03-16",2018,"Bank services","Debit card","Problem with a transaction","Referral","SA",5041,"Closed with explanation","Yes","Yes","Closed"],["CBA-000303","2018-03-20",2018,"Checking / savings","Savings account","Difficulty contacting the bank","Web","WA",6017,"Closed without relief","Yes","Yes","Closed"],["CBA-000304","2018-03-21",2018,"Mortgage","Fixed rate home loan","Problem with a transaction","Web","VIC",3000,"Closed with explanation","Yes","No","Closed"],["CBA-000305","2018-03-25",2018,"Mortgage","Owner-occupier home loan","Statement error","Web","NSW",2500,"Closed with explanation","Yes","No","Closed"],["CBA-000306","2018-03-26",2018,"Bank services","ATM access","Interest rate not as advertised","Web","NSW",2150,"Closed with explanation","Yes","No","Closed"],["CBA-000307","2018-03-29",2018,"Credit card","Low rate credit card","Interest rate not as advertised","Web","SA",5000,"Closed with monetary relief","Yes","No","Closed"],["CBA-000308","2018-03-31",2018,"Mortgage","Investment home loan","Poor customer service","Web","WA",6100,"Closed with explanation","Yes","No","Closed"],["CBA-000309","2018-04-14",2018,"Credit card","Low rate credit card","Delayed processing","Postal mail","NSW",2010,"In progress","Yes","No","In progress"],["CBA-000310","2018-04-24",2018,"Credit card","Rewards credit card","Statement error","Referral","VIC",3121,"Closed with explanation","Yes","No","Closed"],["CBA-000311","2018-05-14",2018,"Checking / savings","Youth account","Account closed without notice","Web","SA",5000,"Closed with explanation","Yes","Yes","Closed"],["CBA-000312","2018-05-23",2018,"Credit card","Rewards credit card","Incorrect fees or charges","Web","NSW",2500,"Closed with non-monetary relief","Yes","No","Closed"],["CBA-000313","2018-06-03",2018,"Credit card","Store credit card","Poor customer service","Web","VIC",3121,"Closed with explanation","Yes","No","Closed"],["CBA-000314","2018-06-06",2018,"Other","Superannuation","Account closed without notice","Phone","QLD",4207,"Closed with explanation","Yes","No","Closed"],["CBA-000315","2018-06-08",2018,"Other","Foreign currency","Statement error","Referral","QLD",4350,"Closed with explanation","Yes","No","Closed"],["CBA-000316","2018-06-10",2018,"Checking / savings","Youth account","Delayed processing","Referral","NSW",2000,"Closed with explanation","Yes","No","Closed"],["CBA-000317","2018-06-12",2018,"Bank services","Debit card","Delayed processing","Web","VIC",3020,"Closed with monetary relief","Yes","No","Closed"],["CBA-000318","2018-06-18",2018,"Other","Car loan","Poor customer service","Referral","QLD",4000,"Closed with monetary relief","Yes","No","Closed"],["CBA-000319","2018-06-24",2018,"Other","Insurance","Difficulty contacting the bank","Referral","WA",6000,"Closed with monetary relief","Yes","Yes","Closed"],["CBA-000320","2018-06-27",2018,"Credit card","Platinum credit card","Poor customer service","Phone","NSW",2250,"Closed with explanation","Yes","No","Closed"],["CBA-000321","2018-07-01",2018,"Credit card","Platinum credit card","Difficulty contacting the bank","Web","NSW",2500,"Closed with explanation","Yes","No","Closed"],["CBA-000322","2018-07-07",2018,"Other","Overdraft","Dispute not resolved","Web","VIC",3550,"Closed with explanation","No","No","Closed"],["CBA-000323","2018-07-14",2018,"Credit card","Rewards credit card","Account closed without notice","Web","WA",6000,"Closed with explanation","Yes","No","Closed"],["CBA-000324","2018-07-18",2018,"Mortgage","Fixed rate home loan","Account closed without notice","Referral","ACT",2900,"Closed with explanation","Yes","No","Closed"],["CBA-000325","2018-07-25",2018,"Other","Insurance","Statement error","Postal mail","NSW",2000,"Closed with non-monetary relief","Yes","No","Closed"],["CBA-000326","2018-08-01",2018,"Credit card","Rewards credit card","Poor customer service","Referral","QLD",4207,"Closed with explanation","Yes","No","Closed"],["CBA-000327","2018-08-05",2018,"Checking / savings","Savings account","Delayed processing","Web","NSW",2600,"Closed with explanation","Yes","No","Closed"],["CBA-000328","2018-08-12",2018,"Mortgage","Fixed rate home loan","Fraud or unauthorised transaction","Web","VIC",3020,"In progress","Yes","No","In progress"],["CBA-000329","2018-08-14",2018,"Mortgage","Fixed rate home loan","Dispute not resolved","Web","NSW",2000,"Closed with explanation","Yes","No","Closed"],["CBA-000330","2018-08-14",2018,"Mortgage","Investment home loan","Incorrect fees or charges","Referral","VIC",3020,"Closed with explanation","Yes","No","Closed"],["CBA-000331","2018-08-19",2018,"Mortgage","Line of credit","Statement error","Phone","TAS",7010,"Closed with explanation","No","Yes","Closed"],["CBA-000332","2018-09-03",2018,"Credit card","Rewards credit card","Statement error","Web","VIC",3550,"Closed with explanation","Yes","No","Closed"],["CBA-000333","2018-09-15",2018,"Other","Personal loan","Fraud or unauthorised transaction","Web","NSW",2600,"Closed with explanation","Yes","No","Closed"],["CBA-000334","2018-09-16",2018,"Other","Superannuation","Dispute not resolved","Phone","NSW",2010,"Closed with explanation","Yes","No","Closed"],["CBA-000335","2018-09-20",2018,"Checking / savings","Savings account","Difficulty contacting the bank","Referral","ACT",2601,"Closed with explanation","Yes","Yes","Closed"],["CBA-000336","2018-09-21",2018,"Other","Insurance","Problem with a transaction","Web","WA",6210,"In progress","Yes","No","In progress"],["CBA-000337","2018-09-22",2018,"Other","Foreign currency","Difficulty contacting the bank","Referral","NSW",2000,"Closed with monetary relief","Yes","No","Closed"],["CBA-000338","2018-10-06",2018,"Checking / savings","Youth account","Incorrect fees or charges","Web","VIC",3000,"Closed with explanation","Yes","No","Closed"],["CBA-000339","2018-10-06",2018,"Checking / savings","Savings account","Account closed without notice","Phone","NSW",2500,"Closed with non-monetary relief","Yes","No","Closed"],["CBA-000340","2018-10-17",2018,"Credit card","Low rate credit card","Poor customer service","Referral","NSW",2500,"Closed with monetary relief","Yes","No","Closed"],["CBA-000341","2018-10-18",2018,"Credit card","Platinum credit card","Dispute not resolved","Web","TAS",7250,"In progress","Yes","No","In progress"],["CBA-000342","2018-10-20",2018,"Other","Car loan","Dispute not resolved","Referral","VIC",3550,"Closed without relief","Yes","Yes","Closed"],["CBA-000343","2018-10-28",2018,"Credit card","Low rate credit card","Fraud or unauthorised transaction","Phone","QLD",4207,"Closed with monetary relief","Yes","Yes","Closed"],["CBA-000344","2018-11-02",2018,"Bank services","Online banking","Difficulty contacting the bank","Web","ACT",2600,"Closed with explanation","Yes","No","Closed"],["CBA-000345","2018-11-07",2018,"Checking / savings","Savings account","Account closed without notice","Phone","NSW",2600,"Closed with explanation","Yes","No","Closed"],["CBA-000346","2018-11-12",2018,"Checking / savings","Everyday transaction account","Problem with a transaction","Referral","VIC",3000,"Closed with explanation","Yes","No","Closed"],["CBA-000347","2018-11-15",2018,"Other","Overdraft","Statement error","Web","SA",5000,"Closed with explanation","Yes","No","Closed"],["CBA-000348","2018-11-17",2018,"Other","Foreign currency","Delayed processing","Referral","NSW",2010,"Closed without relief","Yes","No","Closed"],["CBA-000349","2018-11-18",2018,"Other","Car loan","Poor customer service","Referral","NSW",2600,"Closed without relief","Yes","No","Closed"],["CBA-000350","2018-11-25",2018,"Other","Foreign currency","Statement error","Referral","SA",5290,"In progress","Yes","No","In progress"],["CBA-000351","2018-12-03",2018,"Other","Overdraft","Dispute not resolved","Web","WA",6430,"Closed with non-monetary relief","No","Yes","Closed"],["CBA-000352","2018-12-06",2018,"Mortgage","Line of credit","Interest rate not as advertised","Phone","NSW",2600,"Closed without relief","Yes","No","Closed"],["CBA-000353","2018-12-06",2018,"Other","Insurance","Delayed processing","Web","QLD",4000,"Closed with non-monetary relief","Yes","Yes","Closed"],["CBA-000354","2018-12-08",2018,"Other","Car loan","Incorrect fees or charges","Postal mail","VIC",3121,"Closed with monetary relief","Yes","No","Closed"],["CBA-000355","2018-12-08",2018,"Checking / savings","Term deposit","Delayed processing","Web","VIC",3121,"Closed with explanation","Yes","No","Closed"],["CBA-000356","2018-12-08",2018,"Credit card","Platinum credit card","Dispute not resolved","Referral","NSW",2500,"Closed without relief","Yes","No","Closed"],["CBA-000357","2019-01-15",2019,"Other","Overdraft","Interest rate not as advertised","Web","VIC",3150,"Closed without relief","Yes","No","Closed"],["CBA-000358","2019-01-19",2019,"Checking / savings","Youth account","Statement error","Web","VIC",3020,"Closed with explanation","Yes","No","Closed"],["CBA-000359","2019-01-24",2019,"Mortgage","Owner-occupier home loan","Interest rate not as advertised","Web","QLD",4101,"Closed with explanation","Yes","No","Closed"],["CBA-000360","2019-02-04",2019,"Credit card","Store credit card","Poor customer service","Web","NSW",2170,"Closed without relief","No","No","Closed"],["CBA-000361","2019-02-10",2019,"Bank services","ATM access","Poor customer service","Phone","QLD",4870,"Closed with explanation","Yes","Yes","Closed"],["CBA-000362","2019-02-11",2019,"Mortgage","Line of credit","Interest rate not as advertised","Referral","NSW",2010,"Closed with explanation","Yes","No","Closed"],["CBA-000363","2019-02-16",2019,"Other","Car loan","Dispute not resolved","Web","NSW",2010,"Closed with explanation","Yes","No","Closed"],["CBA-000364","2019-02-18",2019,"Mortgage","Investment home loan","Account closed without notice","Web","VIC",3121,"Closed with explanation","Yes","No","Closed"],["CBA-000365","2019-03-04",2019,"Mortgage","Investment home loan","Delayed processing","Referral","VIC",3350,"Closed with explanation","Yes","No","Closed"],["CBA-000366","2019-03-06",2019,"Credit card","Low rate credit card","Incorrect fees or charges","Referral","NSW",2250,"Closed without relief","Yes","Yes","Closed"],["CBA-000367","2019-03-08",2019,"Other","Car loan","Difficulty contacting the bank","Referral","NSW",2150,"Closed with explanation","Yes","Yes","Closed"],["CBA-000368","2019-03-10",2019,"Other","Insurance","Delayed processing","Web","QLD",4101,"Closed with explanation","Yes","No","Closed"],["CBA-000369","2019-03-13",2019,"Other","Insurance","Poor customer service","Web","VIC",3121,"Closed with explanation","Yes","Yes","Closed"],["CBA-000370","2019-03-23",2019,"Other","Overdraft","Statement error","Web","VIC",3550,"Closed without relief","Yes","No","Closed"],["CBA-000371","2019-03-25",2019,"Checking / savings","Everyday transaction account","Poor customer service","Web","NSW",2600,"Closed with non-monetary relief","Yes","No","Closed"],["CBA-000372","2019-03-29",2019,"Credit card","Store credit card","Difficulty contacting the bank","Referral","WA",6000,"Closed without relief","Yes","No","Closed"],["CBA-000373","2019-04-01",2019,"Other","Personal loan","Interest rate not as advertised","Referral","NSW",2150,"Closed with explanation","Yes","No","Closed"],["CBA-000374","2019-04-13",2019,"Other","Overdraft","Problem with a transaction","Referral","QLD",4207,"Closed with explanation","Yes","No","Closed"],["CBA-000375","2019-04-16",2019,"Bank services","ATM access","Difficulty contacting the bank","Postal mail","QLD",4870,"Closed with explanation","Yes","No","Closed"],["CBA-000376","2019-05-12",2019,"Credit card","Platinum credit card","Statement error","Web","NSW",2150,"Closed with explanation","Yes","No","Closed"],["CBA-000377","2019-05-13",2019,"Bank services","ATM access","Account closed without notice","Phone","NSW",2000,"Closed with non-monetary relief","Yes","No","Closed"],["CBA-000378","2019-05-17",2019,"Credit card","Platinum credit card","Delayed processing","Web","VIC",3000,"Closed with explanation","Yes","No","Closed"],["CBA-000379","2019-05-18",2019,"Other","Personal loan","Poor customer service","Referral","NSW",2500,"Closed without relief","Yes","Yes","Closed"],["CBA-000380","2019-05-22",2019,"Checking / savings","Youth account","Fraud or unauthorised transaction","Web","ACT",2601,"Closed with explanation","Yes","No","Closed"],["CBA-000381","2019-05-22",2019,"Bank services","ATM access","Difficulty contacting the bank","Web","NSW",2600,"Closed with monetary relief","Yes","Yes","Closed"],["CBA-000382","2019-05-28",2019,"Credit card","Low rate credit card","Statement error","Postal mail","VIC",3121,"Closed with explanation","Yes","Yes","Closed"],["CBA-000383","2019-06-08",2019,"Other","Foreign currency","Fraud or unauthorised transaction","Web","SA",5290,"Closed with explanation","Yes","No","Closed"],["CBA-000384","2019-06-09",2019,"Bank services","Direct debit","Difficulty contacting the bank","Postal mail","QLD",4870,"Closed without relief","Yes","Yes","Closed"],["CBA-000385","2019-06-13",2019,"Credit card","Store credit card","Dispute not resolved","Web","QLD",4870,"Closed with explanation","Yes","No","Closed"],["CBA-000386","2019-07-01",2019,"Other","Car loan","Dispute not resolved","Postal mail","WA",6017,"Closed with explanation","Yes","No","Closed"],["CBA-000387","2019-07-04",2019,"Other","Car loan","Poor customer service","Web","TAS",7010,"Closed with explanation","Yes","No","Closed"],["CBA-000388","2019-07-15",2019,"Mortgage","Fixed rate home loan","Statement error","Phone","VIC",3121,"Closed with explanation","Yes","No","Closed"],["CBA-000389","2019-07-16",2019,"Credit card","Store credit card","Dispute not resolved","Referral","WA",6100,"Closed with monetary relief","Yes","No","Closed"],["CBA-000390","2019-07-16",2019,"Checking / savings","Everyday transaction account","Problem with a transaction","Web","QLD",4207,"Closed with explanation","Yes","Yes","Closed"],["CBA-000391","2019-07-18",2019,"Checking / savings","Everyday transaction account","Dispute not resolved","Postal mail","VIC",3121,"Closed with explanation","Yes","Yes","Closed"],["CBA-000392","2019-07-25",2019,"Bank services","International transfer","Dispute not resolved","Referral","QLD",4207,"Closed with explanation","Yes","No","Closed"],["CBA-000393","2019-07-31",2019,"Other","Superannuation","Delayed processing","Phone","NSW",2500,"Closed with non-monetary relief","Yes","No","Closed"],["CBA-000394","2019-08-05",2019,"Bank services","Online banking","Poor customer service","Referral","QLD",4000,"Closed with explanation","Yes","No","Closed"],["CBA-000395","2019-08-17",2019,"Checking / savings","Everyday transaction account","Difficulty contacting the bank","Referral","VIC",3000,"In progress","Yes","No","In progress"],["CBA-000396","2019-08-25",2019,"Other","Insurance","Delayed processing","Web","VIC",3020,"Closed with explanation","Yes","No","Closed"],["CBA-000397","2019-08-29",2019,"Checking / savings","Youth account","Fraud or unauthorised transaction","Web","NSW",2500,"Closed with explanation","Yes","No","Closed"],["CBA-000398","2019-09-03",2019,"Other","Personal loan","Interest rate not as advertised","Referral","VIC",3121,"Closed with non-monetary relief","Yes","No","Closed"],["CBA-000399","2019-09-13",2019,"Bank services","Direct debit","Account closed without notice","Web","NSW",2150,"Closed with explanation","Yes","No","Closed"],["CBA-000400","2019-09-15",2019,"Bank services","Online banking","Statement error","Referral","VIC",3121,"Closed with explanation","Yes","No","Closed"],["CBA-000401","2019-09-15",2019,"Mortgage","Investment home loan","Statement error","Phone","QLD",4870,"Closed with explanation","Yes","No","Closed"],["CBA-000402","2019-09-16",2019,"Other","Personal loan","Statement error","Referral","QLD",4000,"Closed with explanation","Yes","No","Closed"],["CBA-000403","2019-10-06",2019,"Mortgage","Investment home loan","Delayed processing","Phone","NSW",2010,"Closed with explanation","Yes","No","Closed"],["CBA-000404","2019-10-11",2019,"Other","Car loan","Problem with a transaction","Referral","QLD",4000,"Closed with explanation","Yes","No","Closed"],["CBA-000405","2019-10-16",2019,"Credit card","Store credit card","Poor customer service","Web","NSW",2250,"Closed with explanation","Yes","Yes","Closed"],["CBA-000406","2019-10-18",2019,"Other","Foreign currency","Dispute not resolved","Phone","VIC",3020,"In progress","Yes","Yes","In progress"],["CBA-000407","2019-10-20",2019,"Mortgage","Investment home loan","Statement error","Referral","VIC",3000,"Closed with explanation","Yes","No","Closed"],["CBA-000408","2019-10-20",2019,"Mortgage","Owner-occupier home loan","Statement error","Web","NSW",2000,"Closed without relief","Yes","No","Closed"],["CBA-000409","2019-10-22",2019,"Mortgage","Line of credit","Difficulty contacting the bank","Phone","QLD",4207,"Closed with explanation","Yes","No","Closed"],["CBA-000410","2019-10-24",2019,"Bank services","ATM access","Poor customer service","Referral","QLD",4000,"Closed without relief","Yes","No","Closed"],["CBA-000411","2019-10-30",2019,"Other","Car loan","Account closed without notice","Web","NSW",2500,"Closed without relief","Yes","No","Closed"],["CBA-000412","2019-11-02",2019,"Mortgage","Fixed rate home loan","Dispute not resolved","Web","ACT",2600,"Closed with explanation","Yes","No","Closed"],["CBA-000413","2019-11-11",2019,"Checking / savings","Everyday transaction account","Fraud or unauthorised transaction","Postal mail","NSW",2170,"Closed with explanation","Yes","Yes","Closed"],["CBA-000414","2019-11-26",2019,"Bank services","Direct debit","Dispute not resolved","Web","QLD",4350,"Closed with explanation","Yes","Yes","Closed"],["CBA-000415","2019-11-30",2019,"Checking / savings","Youth account","Interest rate not as advertised","Phone","NSW",2600,"In progress","Yes","No","In progress"],["CBA-000416","2019-12-12",2019,"Bank services","Direct debit","Statement error","Web","NSW",2000,"Closed with explanation","Yes","No","Closed"],["CBA-000417","2019-12-23",2019,"Other","Superannuation","Dispute not resolved","Web","NSW",2170,"Closed with explanation","Yes","No","Closed"],["CBA-000418","2019-12-23",2019,"Credit card","Store credit card","Fraud or unauthorised transaction","Web","NSW",2600,"Closed with explanation","Yes","No","Closed"],["CBA-000419","2020-01-09",2020,"Bank services","Online banking","Interest rate not as advertised","Web","NSW",2010,"Closed with explanation","Yes","Yes","Closed"],["CBA-000420","2020-01-14",2020,"Checking / savings","Youth account","Dispute not resolved","Postal mail","QLD",4551,"Closed with explanation","Yes","Yes","Closed"],["CBA-000421","2020-01-24",2020,"Other","Overdraft","Incorrect fees or charges","Referral","QLD",4551,"Closed with monetary relief","Yes","No","Closed"],["CBA-000422","2020-02-02",2020,"Mortgage","Owner-occupier home loan","Incorrect fees or charges","Postal mail","QLD",4207,"Closed with explanation","Yes","Yes","Closed"],["CBA-000423","2020-02-06",2020,"Mortgage","Line of credit","Dispute not resolved","Web","NSW",2500,"In progress","Yes","Yes","In progress"],["CBA-000424","2020-02-06",2020,"Checking / savings","Term deposit","Interest rate not as advertised","Web","ACT",2900,"Closed without relief","Yes","No","Closed"],["CBA-000425","2020-02-12",2020,"Checking / savings","Youth account","Statement error","Web","VIC",3020,"Closed with explanation","Yes","No","Closed"],["CBA-000426","2020-02-24",2020,"Credit card","Store credit card","Interest rate not as advertised","Referral","NSW",2600,"Closed with explanation","Yes","No","Closed"],["CBA-000427","2020-02-26",2020,"Other","Superannuation","Poor customer service","Referral","NSW",2500,"Closed with monetary relief","Yes","No","Closed"],["CBA-000428","2020-03-09",2020,"Mortgage","Owner-occupier home loan","Difficulty contacting the bank","Web","NSW",2150,"Closed with monetary relief","Yes","No","Closed"],["CBA-000429","2020-03-10",2020,"Other","Personal loan","Dispute not resolved","Web","NSW",2010,"Closed with explanation","Yes","Yes","Closed"],["CBA-000430","2020-03-11",2020,"Checking / savings","Everyday transaction account","Fraud or unauthorised transaction","Referral","VIC",3020,"Closed with explanation","Yes","No","Closed"],["CBA-000431","2020-03-15",2020,"Checking / savings","Everyday transaction account","Difficulty contacting the bank","Referral","WA",6210,"Closed with explanation","Yes","Yes","Closed"],["CBA-000432","2020-03-16",2020,"Checking / savings","Term deposit","Delayed processing","Web","VIC",3150,"Closed with non-monetary relief","Yes","No","Closed"],["CBA-000433","2020-03-19",2020,"Credit card","Low rate credit card","Interest rate not as advertised","Web","NSW",2010,"Closed with explanation","Yes","No","Closed"],["CBA-000434","2020-03-28",2020,"Credit card","Rewards credit card","Dispute not resolved","Web","VIC",3020,"Closed with explanation","Yes","No","Closed"],["CBA-000435","2020-03-30",2020,"Other","Foreign currency","Poor customer service","Web","QLD",4870,"Closed with explanation","Yes","No","Closed"],["CBA-000436","2020-04-13",2020,"Credit card","Store credit card","Problem with a transaction","Referral","QLD",4101,"Closed without relief","Yes","No","Closed"],["CBA-000437","2020-04-20",2020,"Other","Overdraft","Fraud or unauthorised transaction","Web","QLD",4101,"Closed with explanation","Yes","Yes","Closed"],["CBA-000438","2020-04-22",2020,"Credit card","Rewards credit card","Account closed without notice","Web","QLD",4350,"Closed with monetary relief","Yes","No","Closed"],["CBA-000439","2020-04-27",2020,"Bank services","Online banking","Delayed processing","Referral","SA",5000,"Closed without relief","Yes","No","Closed"],["CBA-000440","2020-05-03",2020,"Credit card","Platinum credit card","Problem with a transaction","Referral","SA",5041,"In progress","No","No","In progress"],["CBA-000441","2020-05-13",2020,"Credit card","Store credit card","Account closed without notice","Postal mail","QLD",4551,"Closed with explanation","Yes","No","Closed"],["CBA-000442","2020-06-03",2020,"Credit card","Rewards credit card","Fraud or unauthorised transaction","Web","QLD",4870,"Closed with explanation","Yes","No","Closed"],["CBA-000443","2020-06-07",2020,"Other","Overdraft","Difficulty contacting the bank","Web","NSW",2000,"Closed without relief","Yes","No","Closed"],["CBA-000444","2020-06-08",2020,"Other","Personal loan","Dispute not resolved","Phone","QLD",4101,"Closed with monetary relief","Yes","No","Closed"],["CBA-000445","2020-06-18",2020,"Bank services","International transfer","Statement error","Web","NSW",2000,"Closed with explanation","Yes","No","Closed"],["CBA-000446","2020-06-21",2020,"Credit card","Low rate credit card","Statement error","Web","QLD",4000,"Closed with monetary relief","Yes","No","Closed"],["CBA-000447","2020-06-22",2020,"Mortgage","Investment home loan","Interest rate not as advertised","Phone","VIC",3550,"Closed with explanation","Yes","Yes","Closed"],["CBA-000448","2020-06-28",2020,"Mortgage","Fixed rate home loan","Interest rate not as advertised","Web","QLD",4350,"Closed without relief","Yes","Yes","Closed"],["CBA-000449","2020-07-03",2020,"Credit card","Low rate credit card","Statement error","Referral","WA",6017,"Closed without relief","Yes","No","Closed"],["CBA-000450","2020-07-07",2020,"Mortgage","Owner-occupier home loan","Delayed processing","Web","TAS",7000,"Closed without relief","Yes","Yes","Closed"],["CBA-000451","2020-07-08",2020,"Checking / savings","Everyday transaction account","Delayed processing","Phone","NSW",2150,"Closed with explanation","Yes","Yes","Closed"],["CBA-000452","2020-07-09",2020,"Credit card","Platinum credit card","Account closed without notice","Web","QLD",4551,"Closed with non-monetary relief","Yes","No","Closed"],["CBA-000453","2020-07-16",2020,"Other","Car loan","Incorrect fees or charges","Postal mail","SA",5108,"Closed with non-monetary relief","No","No","Closed"],["CBA-000454","2020-07-25",2020,"Checking / savings","Everyday transaction account","Difficulty contacting the bank","Web","VIC",3550,"Closed with non-monetary relief","Yes","No","Closed"],["CBA-000455","2020-07-26",2020,"Other","Superannuation","Fraud or unauthorised transaction","Referral","NSW",2600,"Closed with monetary relief","Yes","No","Closed"],["CBA-000456","2020-08-06",2020,"Credit card","Store credit card","Statement error","Referral","QLD",4551,"Closed without relief","Yes","No","Closed"],["CBA-000457","2020-08-17",2020,"Other","Car loan","Account closed without notice","Web","SA",5000,"Closed with non-monetary relief","Yes","Yes","Closed"],["CBA-000458","2020-08-22",2020,"Checking / savings","Youth account","Account closed without notice","Web","SA",5108,"Closed without relief","Yes","No","Closed"],["CBA-000459","2020-08-29",2020,"Other","Superannuation","Statement error","Phone","VIC",3121,"Closed with monetary relief","Yes","No","Closed"],["CBA-000460","2020-09-21",2020,"Credit card","Rewards credit card","Poor customer service","Web","TAS",7010,"Closed with monetary relief","Yes","Yes","Closed"],["CBA-000461","2020-10-04",2020,"Credit card","Low rate credit card","Incorrect fees or charges","Referral","VIC",3150,"Closed with explanation","Yes","No","Closed"],["CBA-000462","2020-11-03",2020,"Checking / savings","Everyday transaction account","Interest rate not as advertised","Web","VIC",3121,"Closed with non-monetary relief","Yes","Yes","Closed"],["CBA-000463","2020-11-06",2020,"Other","Car loan","Problem with a transaction","Web","NSW",2000,"Closed without relief","Yes","No","Closed"],["CBA-000464","2020-11-18",2020,"Mortgage","Line of credit","Dispute not resolved","Web","QLD",4101,"Closed with non-monetary relief","Yes","Yes","Closed"],["CBA-000465","2020-11-22",2020,"Credit card","Rewards credit card","Account closed without notice","Web","NSW",2600,"Closed without relief","Yes","No","Closed"],["CBA-000466","2020-11-28",2020,"Credit card","Rewards credit card","Delayed processing","Referral","SA",5108,"Closed without relief","No","No","Closed"],["CBA-000467","2020-12-07",2020,"Credit card","Store credit card","Fraud or unauthorised transaction","Referral","WA",6100,"Closed with explanation","Yes","No","Closed"]]</script>
+<script>
+(function(){
+  'use strict';
+
+  var KEYS = ['id','date','year','product','subproduct','issue','requestType','state','postcode','response','timely','disputed','status'];
+  var RAW = JSON.parse(document.getElementById('data-json').textContent).map(function(row){
+    var o = {};
+    for (var i=0;i<KEYS.length;i++){ o[KEYS[i]] = row[i]; }
+    o.month = o.date ? o.date.slice(0,7) : null; // YYYY-MM
+    return o;
+  });
+
+  var STATE_ORDER = ['NT','QLD','WA','SA','NSW','VIC','ACT','TAS'];
+  var STATE_AREA = { NT:'nt', QLD:'qld', WA:'wa', SA:'sa', NSW:'nsw', VIC:'vic', ACT:'act', TAS:'tas' };
+  var STATE_NAMES = { NT:'Northern Territory', QLD:'Queensland', WA:'Western Australia', SA:'South Australia',
+    NSW:'New South Wales', VIC:'Victoria', ACT:'Australian Capital Territory', TAS:'Tasmania' };
+
+  var YELLOW = '#FFCC00', YELLOW_DEEP='#B98A00', INK = '#15130F', CHARCOAL='#4A473F', MUTED='#8C887C', BORDER='#E4E1D8';
+
+  // ---------------- Filter state ----------------
+  var filters = { year:null, month:null, product:null, state:null, requestType:null };
+
+  function filtersActiveCount(){
+    var n = 0;
+    for (var k in filters){ if (filters[k]) n++; }
+    return n;
+  }
+
+  function applyFilters(rows){
+    return rows.filter(function(r){
+      if (filters.year && r.year !== filters.year) return false;
+      if (filters.month && r.month !== filters.month) return false;
+      if (filters.product && r.product !== filters.product) return false;
+      if (filters.state && r.state !== filters.state) return false;
+      if (filters.requestType && r.requestType !== filters.requestType) return false;
+      return true;
+    });
+  }
+
+  function setFilter(key, value, opts){
+    opts = opts || {};
+    var next = (filters[key] === value) ? null : value; // toggle
+    filters[key] = next;
+    if (key === 'year' && next !== null) filters.month = null;
+    if (key === 'month' && next !== null) filters.year = null;
+    renderAll();
+    announce();
+  }
+
+  function clearAll(){
+    filters = { year:null, month:null, product:null, state:null, requestType:null };
+    document.getElementById('filter-year').value = '';
+    document.getElementById('filter-product').value = '';
+    document.getElementById('filter-state').value = '';
+    renderAll();
+    announce();
+  }
+
+  function announce(){
+    var live = document.getElementById('live-region');
+    var n = applyFilters(RAW).length;
+    live.textContent = n + ' of ' + RAW.length + ' complaints shown' + (filtersActiveCount() ? ' (filtered).' : '.');
+  }
+
+  // ---------------- Populate dropdowns ----------------
+  function uniqueSorted(rows, key){
+    var set = {};
+    rows.forEach(function(r){ if (r[key] !== null && r[key] !== undefined) set[r[key]] = true; });
+    return Object.keys(set).sort();
+  }
+
+  function populateDropdowns(){
+    var years = uniqueSorted(RAW, 'year');
+    var yearSel = document.getElementById('filter-year');
+    years.forEach(function(y){
+      var opt = document.createElement('option');
+      opt.value = y; opt.textContent = y;
+      yearSel.appendChild(opt);
+    });
+
+    var products = uniqueSorted(RAW, 'product');
+    var prodSel = document.getElementById('filter-product');
+    products.forEach(function(p){
+      var opt = document.createElement('option');
+      opt.value = p; opt.textContent = p;
+      prodSel.appendChild(opt);
+    });
+
+    var states = STATE_ORDER.filter(function(s){ return RAW.some(function(r){ return r.state === s; }); });
+    var stateSel = document.getElementById('filter-state');
+    states.sort().forEach(function(s){
+      var opt = document.createElement('option');
+      opt.value = s; opt.textContent = s + ' — ' + STATE_NAMES[s];
+      stateSel.appendChild(opt);
+    });
+
+    yearSel.addEventListener('change', function(){
+      filters.year = this.value ? Number(this.value) : null;
+      if (filters.year) filters.month = null;
+      renderAll(); announce();
+    });
+    prodSel.addEventListener('change', function(){
+      filters.product = this.value || null;
+      renderAll(); announce();
+    });
+    stateSel.addEventListener('change', function(){
+      filters.state = this.value || null;
+      renderAll(); announce();
+    });
+  }
+
+  // ---------------- Chips ----------------
+  function monthLabel(m){
+    var d = new Date(m + '-01T00:00:00');
+    return d.toLocaleDateString('en-AU', { month:'short', year:'numeric' });
+  }
+
+  function renderChips(){
+    var wrap = document.getElementById('filter-chips');
+    wrap.innerHTML = '';
+    var chipDefs = [];
+    if (filters.year) chipDefs.push({ key:'year', label:'Year: ' + filters.year });
+    if (filters.month) chipDefs.push({ key:'month', label:'Month: ' + monthLabel(filters.month) });
+    if (filters.product) chipDefs.push({ key:'product', label:'Product: ' + filters.product });
+    if (filters.state) chipDefs.push({ key:'state', label:'State: ' + filters.state });
+    if (filters.requestType) chipDefs.push({ key:'requestType', label:'Channel: ' + filters.requestType });
+
+    chipDefs.forEach(function(c){
+      var chip = document.createElement('span');
+      chip.className = 'chip';
+      var span = document.createElement('span');
+      span.textContent = c.label;
+      chip.appendChild(span);
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.setAttribute('aria-label', 'Remove filter ' + c.label);
+      btn.textContent = '\u00D7';
+      btn.addEventListener('click', function(){
+        filters[c.key] = null;
+        syncControlsFromFilters();
+        renderAll(); announce();
+      });
+      chip.appendChild(btn);
+      wrap.appendChild(chip);
+    });
+
+    var clearBtn = document.getElementById('clear-all');
+    clearBtn.disabled = filtersActiveCount() === 0;
+  }
+
+  function syncControlsFromFilters(){
+    document.getElementById('filter-year').value = filters.year ? String(filters.year) : '';
+    document.getElementById('filter-product').value = filters.product || '';
+    document.getElementById('filter-state').value = filters.state || '';
+  }
+
+  // ---------------- KPIs ----------------
+  function pct(n, d){ return d ? Math.round((n/d)*1000)/10 : 0; }
+
+  function renderKPIs(rows){
+    var total = rows.length;
+    document.getElementById('kpi-total').textContent = total.toLocaleString('en-AU');
+    document.getElementById('kpi-total-sub').textContent = total === RAW.length ? 'all records' : (RAW.length - total) + ' filtered out';
+
+    var timelyYes = rows.filter(function(r){ return r.timely === 'Yes'; }).length;
+    var timelyPct = pct(timelyYes, total);
+    document.getElementById('kpi-timely').innerHTML = timelyPct + '<small>%</small>';
+    document.getElementById('kpi-timely-sub').textContent = timelyYes + ' of ' + total + ' responded on time';
+
+    var disputedYes = rows.filter(function(r){ return r.disputed === 'Yes'; }).length;
+    var disputedPct = pct(disputedYes, total);
+    document.getElementById('kpi-disputed').innerHTML = disputedPct + '<small>%</small>';
+    document.getElementById('kpi-disputed-sub').textContent = disputedYes + ' of ' + total + ' disputed the outcome';
+
+    var closed = rows.filter(function(r){ return r.status === 'Closed'; }).length;
+    var closedPct = pct(closed, total);
+    document.getElementById('kpi-resolved').innerHTML = closedPct + '<small>%</small>';
+    document.getElementById('kpi-resolved-sub').textContent = closed + ' of ' + total + ' cases closed';
+
+    var relief = rows.filter(function(r){ return r.response === 'Closed with monetary relief'; }).length;
+    var reliefPct = pct(relief, closed || total);
+    document.getElementById('kpi-relief').innerHTML = reliefPct + '<small>%</small>';
+    document.getElementById('kpi-relief-sub').textContent = relief + ' of ' + (closed||total) + ' closed cases';
+
+    var issueCounts = {};
+    rows.forEach(function(r){ issueCounts[r.issue] = (issueCounts[r.issue]||0) + 1; });
+    var topIssue = Object.keys(issueCounts).sort(function(a,b){ return issueCounts[b]-issueCounts[a]; })[0];
+    document.getElementById('kpi-issue').textContent = topIssue || '—';
+    document.getElementById('kpi-issue-sub').textContent = topIssue ? (issueCounts[topIssue] + ' cases (' + pct(issueCounts[topIssue], total) + '%)') : '';
+  }
+
+  // ---------------- Charts ----------------
+  var charts = {};
+
+  function countBy(rows, key, order){
+    var counts = {};
+    rows.forEach(function(r){ counts[r[key]] = (counts[r[key]]||0) + 1; });
+    var labels = order || Object.keys(counts);
+    return labels.map(function(l){ return counts[l] || 0; });
+  }
+
+  function barColors(labels, activeKey, activeValue){
+    return labels.map(function(l){ return (activeKey === activeValue.key && activeValue.value === l) ? YELLOW : CHARCOAL; });
+  }
+
+  function renderRequestTypeChart(rows){
+    var allTypes = uniqueSorted(RAW, 'requestType');
+    var counts = {};
+    allTypes.forEach(function(t){ counts[t] = 0; });
+    rows.forEach(function(r){ counts[r.requestType]++; });
+    var sorted = allTypes.slice().sort(function(a,b){ return counts[b]-counts[a]; });
+    var data = sorted.map(function(t){ return counts[t]; });
+    var colors = sorted.map(function(t){ return filters.requestType === t ? YELLOW : CHARCOAL; });
+
+    var ctx = document.getElementById('chart-requesttype').getContext('2d');
+    if (charts.requestType) charts.requestType.destroy();
+    charts.requestType = new Chart(ctx, {
+      type:'bar',
+      data:{ labels: sorted, datasets:[{ label:'Complaints', data:data, backgroundColor:colors, borderRadius:4, maxBarThickness:26 }] },
+      options:{
+        indexAxis:'y',
+        responsive:true, maintainAspectRatio:false,
+        plugins:{ legend:{ display:false }, tooltip:{ callbacks:{ label:function(c){ return c.parsed.x + ' complaints'; } } } },
+        scales:{
+          x:{ beginAtZero:true, ticks:{ color:CHARCOAL, font:{family:"'IBM Plex Mono',monospace", size:10} }, grid:{ color:BORDER } },
+          y:{ ticks:{ color:INK, font:{family:"'IBM Plex Sans',sans-serif", size:11} }, grid:{ display:false } }
+        },
+        onClick:function(evt, elements){
+          if (!elements.length) return;
+          var label = sorted[elements[0].index];
+          setFilter('requestType', label);
+        }
+      }
+    });
+    renderLegendList('requesttype-legend', sorted, 'requestType');
+  }
+
+  function monthRange(){
+    var months = uniqueSorted(RAW, 'month');
+    return months; // all months present in the full dataset, stable axis
+  }
+
+  function renderTrendChart(rows){
+    var months = monthRange();
+    var counts = {};
+    months.forEach(function(m){ counts[m] = 0; });
+    rows.forEach(function(r){ counts[r.month] = (counts[r.month]||0) + 1; });
+    var data = months.map(function(m){ return counts[m]; });
+    var labels = months.map(function(m){ return monthLabel(m); });
+    var pointColors = months.map(function(m){ return filters.month === m ? YELLOW : INK; });
+    var pointRadii = months.map(function(m){ return filters.month === m ? 5 : 2.5; });
+
+    var ctx = document.getElementById('chart-trend').getContext('2d');
+    if (charts.trend) charts.trend.destroy();
+    charts.trend = new Chart(ctx, {
+      type:'line',
+      data:{ labels: labels, datasets:[{
+        label:'Complaints', data:data, borderColor:INK, backgroundColor:'rgba(255,204,0,0.18)',
+        fill:true, tension:0.3, pointBackgroundColor:pointColors, pointRadius:pointRadii, pointHoverRadius:6, borderWidth:2
+      }]},
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        plugins:{ legend:{ display:false }, tooltip:{ callbacks:{ label:function(c){ return c.parsed.y + ' complaints'; } } } },
+        scales:{
+          x:{ ticks:{ color:CHARCOAL, font:{family:"'IBM Plex Mono',monospace", size:9}, maxRotation:60, minRotation:60, autoSkip:true, maxTicksLimit:14 }, grid:{ display:false } },
+          y:{ beginAtZero:true, ticks:{ color:CHARCOAL, font:{family:"'IBM Plex Mono',monospace", size:10} }, grid:{ color:BORDER } }
+        },
+        onClick:function(evt, elements){
+          if (!elements.length) return;
+          var m = months[elements[0].index];
+          setFilter('month', m);
+        }
+      }
+    });
+  }
+
+  function renderAnnualChart(rows){
+    var years = uniqueSorted(RAW, 'year').map(Number);
+    var counts = {};
+    years.forEach(function(y){ counts[y] = 0; });
+    rows.forEach(function(r){ counts[r.year] = (counts[r.year]||0) + 1; });
+    var data = years.map(function(y){ return counts[y]; });
+    var colors = years.map(function(y){ return filters.year === y ? YELLOW : CHARCOAL; });
+
+    var ctx = document.getElementById('chart-annual').getContext('2d');
+    if (charts.annual) charts.annual.destroy();
+    charts.annual = new Chart(ctx, {
+      type:'bar',
+      data:{ labels: years, datasets:[{ label:'Complaints', data:data, backgroundColor:colors, borderRadius:5, maxBarThickness:56 }] },
+      options:{
+        responsive:true, maintainAspectRatio:false,
+        plugins:{ legend:{ display:false }, tooltip:{ callbacks:{ label:function(c){ return c.parsed.y + ' complaints'; } } } },
+        scales:{
+          x:{ ticks:{ color:INK, font:{family:"'IBM Plex Mono',monospace", size:11} }, grid:{ display:false } },
+          y:{ beginAtZero:true, ticks:{ color:CHARCOAL, font:{family:"'IBM Plex Mono',monospace", size:10} }, grid:{ color:BORDER } }
+        },
+        onClick:function(evt, elements){
+          if (!elements.length) return;
+          var y = years[elements[0].index];
+          setFilter('year', y);
+        }
+      }
+    });
+  }
+
+  // ---------------- State tile map ----------------
+  function buildMapTiles(){
+    var grid = document.getElementById('map-grid');
+    grid.innerHTML = '';
+    grid.style.gridTemplateAreas =
+      '". nt qld ." ' +
+      '"wa sa nsw ." ' +
+      '". vic act ." ' +
+      '". tas . ."';
+    STATE_ORDER.forEach(function(s){
+      var tile = document.createElement('button');
+      tile.type = 'button';
+      tile.className = 'map-tile';
+      tile.style.setProperty('--area', STATE_AREA[s]);
+      tile.setAttribute('data-state', s);
+      tile.setAttribute('aria-pressed', 'false');
+      tile.innerHTML = '<span class="code">' + s + '</span><span class="count">0</span>';
+      tile.addEventListener('click', function(){ setFilter('state', s); });
+      grid.appendChild(tile);
+    });
+  }
+
+  function colorForIntensity(t){
+    // t in [0,1] -> interpolate paper -> yellow -> yellow-deep
+    function hexToRgb(h){ h=h.replace('#',''); return [parseInt(h.substr(0,2),16), parseInt(h.substr(2,2),16), parseInt(h.substr(4,2),16)]; }
+    function mix(c1,c2,f){ return c1.map(function(v,i){ return Math.round(v + (c2[i]-v)*f); }); }
+    var paper = hexToRgb('F0EEE7'), yellow = hexToRgb('FFCC00'), deep = hexToRgb('B98A00');
+    var rgb = t < 0.55 ? mix(paper, yellow, t/0.55) : mix(yellow, deep, (t-0.55)/0.45);
+    return 'rgb(' + rgb.join(',') + ')';
+  }
+
+  function renderMap(rows){
+    var counts = {};
+    STATE_ORDER.forEach(function(s){ counts[s] = 0; });
+    rows.forEach(function(r){ if (counts.hasOwnProperty(r.state)) counts[r.state]++; });
+    var max = Math.max.apply(null, STATE_ORDER.map(function(s){ return counts[s]; }));
+    var tiles = document.querySelectorAll('.map-tile');
+    tiles.forEach(function(tile){
+      var s = tile.getAttribute('data-state');
+      var c = counts[s];
+      var t = max ? c / max : 0;
+      tile.style.background = colorForIntensity(t);
+      tile.style.color = t > 0.6 ? '#15130F' : '#15130F';
+      tile.querySelector('.count').textContent = c;
+      var pressed = filters.state === s;
+      tile.setAttribute('aria-pressed', pressed ? 'true' : 'false');
+      tile.setAttribute('aria-label', STATE_NAMES[s] + ': ' + c + ' complaints' + (pressed ? ' (filter active)' : ''));
+      if (pressed) { tile.style.outline = '3px solid #15130F'; tile.style.outlineOffset = '-3px'; }
+      else { tile.style.outline = 'none'; }
+    });
+  }
+
+  // ---------------- Accessible legend lists (keyboard alt for chart clicks) ----------------
+  function renderLegendList(id, labels, key){
+    var existing = document.getElementById(id);
+    if (existing) existing.remove();
+    var host = document.getElementById('chart-requesttype').closest('.panel');
+    var list = document.createElement('div');
+    list.className = 'legend-list';
+    list.id = id;
+    list.setAttribute('role', 'group');
+    list.setAttribute('aria-label', 'Filter by request type');
+    labels.forEach(function(l){
+      var btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'legend-btn';
+      btn.setAttribute('aria-pressed', filters[key] === l ? 'true' : 'false');
+      btn.innerHTML = '<span class="dot" aria-hidden="true"></span>' + l;
+      btn.addEventListener('click', function(){ setFilter(key, l); });
+      list.appendChild(btn);
+    });
+    host.appendChild(list);
+  }
+
+  // ---------------- Render orchestration ----------------
+  function renderAll(){
+    var rows = applyFilters(RAW);
+    renderChips();
+    renderKPIs(rows);
+    renderRequestTypeChart(rows);
+    renderTrendChart(rows);
+    renderAnnualChart(rows);
+    renderMap(rows);
+    document.getElementById('header-total').textContent = rows.length.toLocaleString('en-AU');
+  }
+
+  // ---------------- Init ----------------
+  document.addEventListener('DOMContentLoaded', function(){
+    populateDropdowns();
+    buildMapTiles();
+    document.getElementById('clear-all').addEventListener('click', clearAll);
+    renderAll();
+    announce();
+  });
+})();
+
+</script>
+</body>
+</html>
