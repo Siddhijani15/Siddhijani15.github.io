@@ -1,0 +1,1001 @@
+EmployeeID,AttritionFlag,ExitDate,TenureAtExit,ExitReason
+1,No,,,
+2,No,,,
+3,Yes,2026-08-20,0.17,Compensation
+4,No,,,
+5,No,,,
+6,No,,,
+7,No,,,
+8,Yes,2024-11-08,3.74,Involuntary - Performance
+9,No,,,
+10,Yes,2026-05-14,10.96,Better Opportunity
+11,No,,,
+12,No,,,
+13,No,,,
+14,No,,,
+15,No,,,
+16,No,,,
+17,No,,,
+18,Yes,2025-07-08,0.46,Better Opportunity
+19,No,,,
+20,No,,,
+21,No,,,
+22,No,,,
+23,Yes,2026-04-29,10.32,Better Opportunity
+24,No,,,
+25,No,,,
+26,No,,,
+27,No,,,
+28,Yes,2024-08-10,7,Family / Caregiving
+29,No,,,
+30,No,,,
+31,No,,,
+32,Yes,2026-03-18,9.01,Compensation
+33,No,,,
+34,No,,,
+35,Yes,2024-08-29,1.59,Compensation
+36,No,,,
+37,No,,,
+38,Yes,2025-11-23,0.42,Better Opportunity
+39,Yes,2024-02-07,1.12,Better Opportunity
+40,No,,,
+41,Yes,2026-09-03,0.96,Better Opportunity
+42,No,,,
+43,No,,,
+44,No,,,
+45,No,,,
+46,No,,,
+47,No,,,
+48,Yes,2024-11-09,9.72,Work-Life Balance
+49,No,,,
+50,No,,,
+51,No,,,
+52,No,,,
+53,No,,,
+54,No,,,
+55,Yes,2025-07-15,0.56,Career Growth
+56,No,,,
+57,No,,,
+58,No,,,
+59,Yes,2026-03-14,5.41,Involuntary - Redundancy
+60,No,,,
+61,No,,,
+62,No,,,
+63,No,,,
+64,No,,,
+65,No,,,
+66,Yes,2026-04-19,2.73,Better Opportunity
+67,No,,,
+68,Yes,2025-08-10,0.16,Manager Issues
+69,No,,,
+70,No,,,
+71,Yes,2024-01-25,4.45,Involuntary - Performance
+72,Yes,2024-09-03,3.51,Career Growth
+73,No,,,
+74,No,,,
+75,No,,,
+76,No,,,
+77,Yes,2023-09-21,1.87,Better Opportunity
+78,No,,,
+79,No,,,
+80,No,,,
+81,No,,,
+82,No,,,
+83,No,,,
+84,No,,,
+85,No,,,
+86,No,,,
+87,No,,,
+88,No,,,
+89,No,,,
+90,No,,,
+91,Yes,2025-06-01,3.24,Career Growth
+92,No,,,
+93,No,,,
+94,No,,,
+95,Yes,2025-12-02,10.96,Relocation
+96,Yes,2026-05-25,10.33,Career Growth
+97,No,,,
+98,Yes,2026-07-21,2.54,Career Growth
+99,No,,,
+100,No,,,
+101,Yes,2024-06-19,2.9,Better Opportunity
+102,No,,,
+103,No,,,
+104,Yes,2026-07-03,11.29,Relocation
+105,No,,,
+106,No,,,
+107,Yes,2023-12-05,5.98,Manager Issues
+108,No,,,
+109,Yes,2026-02-14,8.71,Involuntary - Performance
+110,Yes,2026-03-24,8.54,Family / Caregiving
+111,No,,,
+112,No,,,
+113,No,,,
+114,No,,,
+115,No,,,
+116,Yes,2026-05-30,0.01,Compensation
+117,No,,,
+118,No,,,
+119,Yes,2026-06-13,0.02,Better Opportunity
+120,No,,,
+121,No,,,
+122,No,,,
+123,No,,,
+124,Yes,2025-03-11,5.2,Work-Life Balance
+125,Yes,2025-09-13,8.01,Family / Caregiving
+126,No,,,
+127,No,,,
+128,No,,,
+129,No,,,
+130,No,,,
+131,No,,,
+132,No,,,
+133,No,,,
+134,Yes,2024-05-08,3.21,Work-Life Balance
+135,No,,,
+136,Yes,2024-11-25,2.21,Better Opportunity
+137,No,,,
+138,No,,,
+139,Yes,2024-09-30,4.9,Involuntary - Redundancy
+140,No,,,
+141,No,,,
+142,No,,,
+143,No,,,
+144,No,,,
+145,Yes,2025-02-09,6.86,Better Opportunity
+146,No,,,
+147,Yes,2024-03-17,8.42,Work-Life Balance
+148,No,,,
+149,No,,,
+150,No,,,
+151,No,,,
+152,No,,,
+153,No,,,
+154,No,,,
+155,Yes,2025-05-26,1.69,Manager Issues
+156,No,,,
+157,Yes,2025-08-04,1.56,Compensation
+158,No,,,
+159,Yes,2024-12-27,2.15,Work-Life Balance
+160,Yes,2026-01-11,2.73,Better Opportunity
+161,No,,,
+162,No,,,
+163,No,,,
+164,No,,,
+165,No,,,
+166,No,,,
+167,No,,,
+168,Yes,2025-03-04,0.68,Compensation
+169,No,,,
+170,No,,,
+171,No,,,
+172,No,,,
+173,No,,,
+174,No,,,
+175,No,,,
+176,No,,,
+177,No,,,
+178,No,,,
+179,No,,,
+180,No,,,
+181,No,,,
+182,Yes,2024-07-08,2.75,Better Opportunity
+183,Yes,2023-12-18,2.7,Manager Issues
+184,No,,,
+185,No,,,
+186,No,,,
+187,No,,,
+188,No,,,
+189,No,,,
+190,Yes,2024-07-10,9.48,Work-Life Balance
+191,No,,,
+192,Yes,2025-05-04,8.6,Family / Caregiving
+193,No,,,
+194,No,,,
+195,No,,,
+196,No,,,
+197,No,,,
+198,No,,,
+199,No,,,
+200,No,,,
+201,No,,,
+202,No,,,
+203,No,,,
+204,Yes,2024-06-28,0.6,Relocation
+205,No,,,
+206,No,,,
+207,Yes,2024-11-08,2.33,Better Opportunity
+208,Yes,2024-09-28,4.96,Retirement
+209,No,,,
+210,Yes,2025-08-18,1.12,Compensation
+211,No,,,
+212,No,,,
+213,No,,,
+214,No,,,
+215,No,,,
+216,No,,,
+217,No,,,
+218,No,,,
+219,No,,,
+220,No,,,
+221,Yes,2025-06-14,3.21,Compensation
+222,No,,,
+223,Yes,2026-07-07,11.13,Manager Issues
+224,No,,,
+225,No,,,
+226,No,,,
+227,Yes,2025-04-28,3.82,Better Opportunity
+228,No,,,
+229,No,,,
+230,No,,,
+231,No,,,
+232,Yes,2025-11-04,5.91,Involuntary - Performance
+233,Yes,2024-07-16,4.07,Career Growth
+234,Yes,2025-12-06,2.61,Manager Issues
+235,Yes,2024-10-25,3.01,Involuntary - Redundancy
+236,No,,,
+237,No,,,
+238,No,,,
+239,No,,,
+240,No,,,
+241,No,,,
+242,No,,,
+243,No,,,
+244,No,,,
+245,Yes,2024-04-26,0.86,Compensation
+246,No,,,
+247,No,,,
+248,No,,,
+249,No,,,
+250,No,,,
+251,Yes,2026-08-24,3.4,Involuntary - Performance
+252,Yes,2024-08-14,8.98,Career Growth
+253,Yes,2025-04-05,9.02,Career Growth
+254,No,,,
+255,Yes,2026-07-08,0.62,Better Opportunity
+256,No,,,
+257,Yes,2024-10-05,5.95,Retirement
+258,Yes,2026-03-02,0.07,Relocation
+259,No,,,
+260,No,,,
+261,No,,,
+262,Yes,2025-09-25,5.61,Better Opportunity
+263,No,,,
+264,No,,,
+265,Yes,2023-12-14,1.47,Work-Life Balance
+266,No,,,
+267,No,,,
+268,No,,,
+269,No,,,
+270,No,,,
+271,Yes,2024-08-11,6.07,Compensation
+272,No,,,
+273,No,,,
+274,No,,,
+275,No,,,
+276,No,,,
+277,No,,,
+278,Yes,2026-03-02,8.79,Career Growth
+279,No,,,
+280,No,,,
+281,No,,,
+282,No,,,
+283,No,,,
+284,No,,,
+285,No,,,
+286,No,,,
+287,No,,,
+288,Yes,2025-08-22,0.73,Manager Issues
+289,Yes,2024-01-02,8.4,Involuntary - Performance
+290,No,,,
+291,No,,,
+292,No,,,
+293,No,,,
+294,Yes,2026-02-26,8.83,Family / Caregiving
+295,Yes,2024-01-08,3.43,Better Opportunity
+296,Yes,2025-02-23,0.26,Compensation
+297,No,,,
+298,Yes,2025-05-30,1.85,Better Opportunity
+299,No,,,
+300,Yes,2026-03-13,8.4,Compensation
+301,No,,,
+302,No,,,
+303,Yes,2025-12-15,8.34,Involuntary - Redundancy
+304,No,,,
+305,No,,,
+306,Yes,2024-09-03,7.72,Manager Issues
+307,No,,,
+308,No,,,
+309,No,,,
+310,No,,,
+311,No,,,
+312,No,,,
+313,No,,,
+314,No,,,
+315,No,,,
+316,No,,,
+317,No,,,
+318,No,,,
+319,Yes,2024-03-26,6.24,Relocation
+320,No,,,
+321,Yes,2026-02-11,9.77,Compensation
+322,No,,,
+323,Yes,2025-12-17,4.9,Relocation
+324,No,,,
+325,No,,,
+326,No,,,
+327,No,,,
+328,Yes,2026-05-16,6.99,Career Growth
+329,No,,,
+330,No,,,
+331,No,,,
+332,No,,,
+333,No,,,
+334,No,,,
+335,No,,,
+336,No,,,
+337,No,,,
+338,Yes,2026-07-26,9.43,Manager Issues
+339,No,,,
+340,Yes,2026-06-15,0.03,Involuntary - Performance
+341,No,,,
+342,No,,,
+343,No,,,
+344,No,,,
+345,No,,,
+346,No,,,
+347,Yes,2026-01-30,0.83,Better Opportunity
+348,No,,,
+349,No,,,
+350,No,,,
+351,No,,,
+352,No,,,
+353,Yes,2025-08-10,1.65,Career Growth
+354,Yes,2026-06-19,1.58,Work-Life Balance
+355,No,,,
+356,Yes,2023-12-18,5.52,Better Opportunity
+357,Yes,2024-06-01,3.89,Relocation
+358,No,,,
+359,No,,,
+360,No,,,
+361,No,,,
+362,No,,,
+363,No,,,
+364,No,,,
+365,No,,,
+366,No,,,
+367,No,,,
+368,Yes,2025-04-04,1.34,Work-Life Balance
+369,No,,,
+370,Yes,2025-01-31,2.38,Work-Life Balance
+371,No,,,
+372,No,,,
+373,Yes,2024-04-10,7.61,Career Growth
+374,No,,,
+375,No,,,
+376,No,,,
+377,No,,,
+378,No,,,
+379,No,,,
+380,No,,,
+381,No,,,
+382,Yes,2025-08-18,6.16,Better Opportunity
+383,Yes,2025-12-09,3.55,Career Growth
+384,No,,,
+385,Yes,2025-11-14,6.91,Compensation
+386,No,,,
+387,No,,,
+388,No,,,
+389,No,,,
+390,No,,,
+391,No,,,
+392,No,,,
+393,No,,,
+394,Yes,2023-10-22,7.95,Retirement
+395,No,,,
+396,No,,,
+397,No,,,
+398,No,,,
+399,No,,,
+400,No,,,
+401,No,,,
+402,No,,,
+403,No,,,
+404,Yes,2025-05-07,7.42,Work-Life Balance
+405,No,,,
+406,No,,,
+407,No,,,
+408,No,,,
+409,No,,,
+410,Yes,2025-02-14,0.78,Compensation
+411,No,,,
+412,No,,,
+413,No,,,
+414,No,,,
+415,No,,,
+416,No,,,
+417,Yes,2024-08-23,3.63,Manager Issues
+418,No,,,
+419,Yes,2025-04-26,9.36,Compensation
+420,Yes,2026-07-01,8.56,Work-Life Balance
+421,No,,,
+422,No,,,
+423,No,,,
+424,No,,,
+425,No,,,
+426,Yes,2024-08-06,3.38,Family / Caregiving
+427,No,,,
+428,No,,,
+429,No,,,
+430,No,,,
+431,No,,,
+432,No,,,
+433,No,,,
+434,No,,,
+435,No,,,
+436,No,,,
+437,No,,,
+438,No,,,
+439,No,,,
+440,No,,,
+441,No,,,
+442,No,,,
+443,Yes,2025-05-07,8.09,Career Growth
+444,No,,,
+445,No,,,
+446,No,,,
+447,No,,,
+448,No,,,
+449,No,,,
+450,No,,,
+451,No,,,
+452,No,,,
+453,No,,,
+454,Yes,2025-09-13,9.92,Career Growth
+455,No,,,
+456,No,,,
+457,No,,,
+458,No,,,
+459,No,,,
+460,No,,,
+461,No,,,
+462,No,,,
+463,Yes,2026-03-20,0.82,Compensation
+464,No,,,
+465,Yes,2024-08-11,9.72,Manager Issues
+466,No,,,
+467,No,,,
+468,Yes,2025-05-08,10.05,Better Opportunity
+469,No,,,
+470,Yes,2025-05-08,5.96,Career Growth
+471,No,,,
+472,No,,,
+473,No,,,
+474,No,,,
+475,No,,,
+476,No,,,
+477,No,,,
+478,No,,,
+479,No,,,
+480,No,,,
+481,Yes,2026-06-22,0.77,Involuntary - Redundancy
+482,No,,,
+483,No,,,
+484,No,,,
+485,No,,,
+486,No,,,
+487,Yes,2025-02-07,1.04,Career Growth
+488,No,,,
+489,No,,,
+490,Yes,2026-08-04,4.59,Better Opportunity
+491,No,,,
+492,No,,,
+493,No,,,
+494,No,,,
+495,No,,,
+496,Yes,2026-01-07,2.64,Better Opportunity
+497,No,,,
+498,No,,,
+499,No,,,
+500,No,,,
+501,No,,,
+502,Yes,2025-02-15,5.38,Work-Life Balance
+503,Yes,2023-11-10,2.22,Work-Life Balance
+504,No,,,
+505,No,,,
+506,No,,,
+507,No,,,
+508,Yes,2023-11-27,3.82,Compensation
+509,No,,,
+510,No,,,
+511,No,,,
+512,No,,,
+513,No,,,
+514,No,,,
+515,No,,,
+516,No,,,
+517,Yes,2024-03-14,8.33,Career Growth
+518,No,,,
+519,No,,,
+520,No,,,
+521,No,,,
+522,No,,,
+523,Yes,2026-04-21,0.57,Involuntary - Performance
+524,No,,,
+525,Yes,2024-09-09,3.23,Work-Life Balance
+526,No,,,
+527,No,,,
+528,Yes,2024-08-19,5.11,Compensation
+529,No,,,
+530,No,,,
+531,Yes,2025-11-03,9.25,Relocation
+532,No,,,
+533,No,,,
+534,Yes,2025-08-25,10.73,Compensation
+535,No,,,
+536,No,,,
+537,Yes,2026-07-18,4.43,Manager Issues
+538,No,,,
+539,No,,,
+540,No,,,
+541,No,,,
+542,No,,,
+543,No,,,
+544,No,,,
+545,No,,,
+546,No,,,
+547,Yes,2026-08-24,0.98,Compensation
+548,No,,,
+549,No,,,
+550,No,,,
+551,No,,,
+552,No,,,
+553,No,,,
+554,No,,,
+555,No,,,
+556,Yes,2023-12-23,1.03,Work-Life Balance
+557,No,,,
+558,No,,,
+559,No,,,
+560,No,,,
+561,No,,,
+562,No,,,
+563,No,,,
+564,No,,,
+565,Yes,2024-03-18,0.55,Compensation
+566,No,,,
+567,No,,,
+568,No,,,
+569,No,,,
+570,No,,,
+571,No,,,
+572,No,,,
+573,No,,,
+574,No,,,
+575,No,,,
+576,No,,,
+577,Yes,2024-04-27,8.89,Career Growth
+578,No,,,
+579,No,,,
+580,No,,,
+581,Yes,2026-06-02,3.37,Relocation
+582,No,,,
+583,No,,,
+584,No,,,
+585,No,,,
+586,No,,,
+587,No,,,
+588,No,,,
+589,No,,,
+590,No,,,
+591,No,,,
+592,Yes,2026-05-06,1.23,Better Opportunity
+593,Yes,2025-06-12,7.56,Involuntary - Performance
+594,No,,,
+595,No,,,
+596,No,,,
+597,No,,,
+598,No,,,
+599,No,,,
+600,No,,,
+601,No,,,
+602,No,,,
+603,No,,,
+604,No,,,
+605,Yes,2024-06-08,2.7,Career Growth
+606,No,,,
+607,No,,,
+608,Yes,2025-07-08,10.67,Family / Caregiving
+609,No,,,
+610,No,,,
+611,No,,,
+612,Yes,2025-10-15,3.58,Involuntary - Performance
+613,No,,,
+614,No,,,
+615,No,,,
+616,No,,,
+617,No,,,
+618,No,,,
+619,No,,,
+620,No,,,
+621,No,,,
+622,No,,,
+623,No,,,
+624,No,,,
+625,No,,,
+626,No,,,
+627,No,,,
+628,No,,,
+629,No,,,
+630,No,,,
+631,No,,,
+632,No,,,
+633,No,,,
+634,No,,,
+635,No,,,
+636,No,,,
+637,No,,,
+638,No,,,
+639,No,,,
+640,No,,,
+641,Yes,2026-01-19,3.97,Relocation
+642,No,,,
+643,No,,,
+644,No,,,
+645,Yes,2025-05-15,4.44,Better Opportunity
+646,No,,,
+647,No,,,
+648,No,,,
+649,No,,,
+650,Yes,2024-11-16,6.35,Better Opportunity
+651,No,,,
+652,Yes,2024-07-13,9.69,Better Opportunity
+653,No,,,
+654,No,,,
+655,No,,,
+656,No,,,
+657,No,,,
+658,No,,,
+659,No,,,
+660,No,,,
+661,No,,,
+662,No,,,
+663,No,,,
+664,No,,,
+665,No,,,
+666,Yes,2026-03-16,1.8,Involuntary - Redundancy
+667,No,,,
+668,No,,,
+669,No,,,
+670,No,,,
+671,Yes,2024-10-10,4.52,Compensation
+672,Yes,2026-07-26,0.61,Manager Issues
+673,No,,,
+674,No,,,
+675,No,,,
+676,No,,,
+677,No,,,
+678,No,,,
+679,Yes,2026-09-09,3.65,Work-Life Balance
+680,Yes,2025-09-30,8.91,Career Growth
+681,Yes,2026-08-11,10.92,Better Opportunity
+682,No,,,
+683,No,,,
+684,Yes,2026-03-11,9.75,Better Opportunity
+685,Yes,2025-07-24,5.78,Manager Issues
+686,No,,,
+687,No,,,
+688,No,,,
+689,No,,,
+690,No,,,
+691,No,,,
+692,No,,,
+693,No,,,
+694,No,,,
+695,No,,,
+696,Yes,2025-04-26,0.46,Involuntary - Performance
+697,Yes,2025-08-27,9.23,Better Opportunity
+698,No,,,
+699,No,,,
+700,Yes,2024-10-16,1.02,Work-Life Balance
+701,No,,,
+702,No,,,
+703,No,,,
+704,No,,,
+705,No,,,
+706,No,,,
+707,No,,,
+708,No,,,
+709,No,,,
+710,No,,,
+711,No,,,
+712,No,,,
+713,Yes,2026-06-09,1.53,Manager Issues
+714,No,,,
+715,No,,,
+716,Yes,2025-04-04,1.08,Manager Issues
+717,No,,,
+718,No,,,
+719,Yes,2026-05-06,1.31,Better Opportunity
+720,Yes,2026-04-22,7.75,Career Growth
+721,Yes,2024-09-26,8.44,Relocation
+722,No,,,
+723,No,,,
+724,No,,,
+725,No,,,
+726,No,,,
+727,No,,,
+728,No,,,
+729,Yes,2024-05-02,6.75,Involuntary - Redundancy
+730,No,,,
+731,No,,,
+732,No,,,
+733,No,,,
+734,No,,,
+735,No,,,
+736,No,,,
+737,No,,,
+738,No,,,
+739,No,,,
+740,No,,,
+741,Yes,2024-09-29,3.3,Career Growth
+742,No,,,
+743,No,,,
+744,No,,,
+745,Yes,2025-04-28,2.55,Career Growth
+746,No,,,
+747,No,,,
+748,Yes,2025-08-28,0.04,Career Growth
+749,No,,,
+750,No,,,
+751,Yes,2026-05-15,0.3,Career Growth
+752,Yes,2024-09-07,6.39,Better Opportunity
+753,No,,,
+754,Yes,2025-07-16,6.46,Better Opportunity
+755,No,,,
+756,No,,,
+757,Yes,2024-08-18,7.51,Career Growth
+758,Yes,2025-10-16,1.93,Career Growth
+759,No,,,
+760,No,,,
+761,No,,,
+762,Yes,2024-12-06,8.28,Manager Issues
+763,No,,,
+764,No,,,
+765,No,,,
+766,No,,,
+767,No,,,
+768,No,,,
+769,No,,,
+770,No,,,
+771,No,,,
+772,No,,,
+773,No,,,
+774,No,,,
+775,No,,,
+776,No,,,
+777,No,,,
+778,No,,,
+779,Yes,2026-04-14,3.6,Work-Life Balance
+780,No,,,
+781,Yes,2026-08-05,0.04,Involuntary - Redundancy
+782,No,,,
+783,No,,,
+784,Yes,2025-03-30,9.32,Compensation
+785,No,,,
+786,No,,,
+787,No,,,
+788,No,,,
+789,No,,,
+790,No,,,
+791,No,,,
+792,No,,,
+793,No,,,
+794,Yes,2026-07-24,2.46,Manager Issues
+795,No,,,
+796,Yes,2024-08-31,0.22,Career Growth
+797,No,,,
+798,No,,,
+799,No,,,
+800,No,,,
+801,No,,,
+802,No,,,
+803,No,,,
+804,No,,,
+805,No,,,
+806,Yes,2026-08-25,4.5,Family / Caregiving
+807,No,,,
+808,No,,,
+809,Yes,2025-09-21,2.13,Better Opportunity
+810,No,,,
+811,Yes,2024-11-10,8.71,Compensation
+812,No,,,
+813,No,,,
+814,No,,,
+815,No,,,
+816,No,,,
+817,No,,,
+818,No,,,
+819,Yes,2025-12-27,9.72,Better Opportunity
+820,Yes,2024-12-31,8.93,Compensation
+821,No,,,
+822,No,,,
+823,No,,,
+824,Yes,2025-06-10,10.75,Manager Issues
+825,No,,,
+826,Yes,2024-09-12,9.67,Better Opportunity
+827,No,,,
+828,No,,,
+829,No,,,
+830,Yes,2024-06-27,3.18,Involuntary - Performance
+831,No,,,
+832,No,,,
+833,No,,,
+834,No,,,
+835,No,,,
+836,No,,,
+837,No,,,
+838,No,,,
+839,No,,,
+840,No,,,
+841,No,,,
+842,No,,,
+843,No,,,
+844,No,,,
+845,No,,,
+846,No,,,
+847,Yes,2024-11-09,5.41,Career Growth
+848,Yes,2026-04-15,7.03,Compensation
+849,No,,,
+850,No,,,
+851,No,,,
+852,No,,,
+853,No,,,
+854,No,,,
+855,Yes,2026-06-17,0.08,Work-Life Balance
+856,Yes,2025-04-19,8.19,Compensation
+857,No,,,
+858,Yes,2024-05-31,0.77,Compensation
+859,Yes,2025-01-02,8.9,Compensation
+860,No,,,
+861,No,,,
+862,No,,,
+863,No,,,
+864,No,,,
+865,No,,,
+866,No,,,
+867,No,,,
+868,Yes,2024-06-22,0.24,Involuntary - Performance
+869,No,,,
+870,No,,,
+871,No,,,
+872,Yes,2025-02-13,3.18,Career Growth
+873,No,,,
+874,Yes,2026-03-11,10.57,Manager Issues
+875,No,,,
+876,No,,,
+877,No,,,
+878,No,,,
+879,Yes,2026-06-26,5.56,Compensation
+880,No,,,
+881,Yes,2025-05-31,9.01,Relocation
+882,No,,,
+883,No,,,
+884,Yes,2025-10-14,7.27,Work-Life Balance
+885,No,,,
+886,No,,,
+887,No,,,
+888,No,,,
+889,No,,,
+890,No,,,
+891,No,,,
+892,No,,,
+893,No,,,
+894,No,,,
+895,No,,,
+896,No,,,
+897,Yes,2025-12-05,5.17,Better Opportunity
+898,No,,,
+899,No,,,
+900,Yes,2025-07-19,8.76,Involuntary - Performance
+901,No,,,
+902,Yes,2025-04-09,9.84,Career Growth
+903,No,,,
+904,No,,,
+905,Yes,2024-04-17,2.8,Work-Life Balance
+906,No,,,
+907,No,,,
+908,No,,,
+909,No,,,
+910,No,,,
+911,No,,,
+912,No,,,
+913,No,,,
+914,Yes,2026-05-17,11.15,Better Opportunity
+915,No,,,
+916,Yes,2026-04-03,2.78,Involuntary - Redundancy
+917,Yes,2025-05-26,8.98,Work-Life Balance
+918,No,,,
+919,No,,,
+920,No,,,
+921,No,,,
+922,No,,,
+923,No,,,
+924,No,,,
+925,Yes,2025-12-24,6.95,Relocation
+926,No,,,
+927,No,,,
+928,No,,,
+929,No,,,
+930,No,,,
+931,No,,,
+932,Yes,2024-02-23,9.38,Work-Life Balance
+933,No,,,
+934,No,,,
+935,Yes,2026-08-15,1.17,Involuntary - Performance
+936,Yes,2024-05-16,9.08,Involuntary - Performance
+937,No,,,
+938,No,,,
+939,No,,,
+940,No,,,
+941,Yes,2024-01-09,5.3,Manager Issues
+942,No,,,
+943,No,,,
+944,Yes,2026-02-06,6.71,Manager Issues
+945,No,,,
+946,No,,,
+947,No,,,
+948,No,,,
+949,No,,,
+950,No,,,
+951,No,,,
+952,No,,,
+953,No,,,
+954,No,,,
+955,No,,,
+956,Yes,2023-11-10,1.61,Involuntary - Performance
+957,Yes,2025-10-27,6.6,Compensation
+958,Yes,2026-04-14,0.21,Work-Life Balance
+959,No,,,
+960,No,,,
+961,No,,,
+962,No,,,
+963,No,,,
+964,No,,,
+965,No,,,
+966,No,,,
+967,No,,,
+968,Yes,2026-04-07,7.35,Work-Life Balance
+969,Yes,2026-07-29,1.19,Better Opportunity
+970,Yes,2023-09-19,7.78,Career Growth
+971,No,,,
+972,No,,,
+973,No,,,
+974,No,,,
+975,No,,,
+976,No,,,
+977,No,,,
+978,No,,,
+979,No,,,
+980,No,,,
+981,No,,,
+982,Yes,2023-12-23,1.38,Compensation
+983,Yes,2025-10-23,0.02,Involuntary - Redundancy
+984,No,,,
+985,No,,,
+986,No,,,
+987,No,,,
+988,No,,,
+989,No,,,
+990,No,,,
+991,No,,,
+992,No,,,
+993,Yes,2026-02-14,9.36,Better Opportunity
+994,Yes,2026-07-09,0.13,Involuntary - Redundancy
+995,No,,,
+996,No,,,
+997,No,,,
+998,No,,,
+999,Yes,2025-01-26,3.08,Better Opportunity
+1000,No,,,
